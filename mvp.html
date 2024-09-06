@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map of Whale Strandings and Sightings</title>
+    <link rel="stylesheet" href="DECO1800.css/base.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Whales Knowledge Base</a></li>
+                <li><a href="#">Interactive Map</a></li>
+            </ul>
+            <input type="text" placeholder="Search..." id="search-box">
+            <a href="#" class="login">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="map-section">
+            <h1>Map of Whales Strandings and Sightings</h1>
+            <p>Hover Map To Enable Magnifying Glass Viewing</p>
+            <div class="map-container">
+                <img 
+                 src="./image/map.png" alt="Map of Australia Whale Sightings" id="whale-map">
+            </div>
+        </section>
+
+        <section class="filter-section">
+            <h2>Filter</h2>
+            <div class="filter-options">
+                <div class="activity-type">
+                    <h3>Types of Activity</h3>
+                    <div class="activity-checkboxes">
+                        <label><input type="checkbox" id="strandings-checkbox"> Strandings</label>
+                        <label><input type="checkbox" id="sightings-checkbox"> Sightings</label>
+                    </div>
+                </div>
+                <div class="whale-type">
+                    <h3>Types of Whales</h3>
+                    <div class="whale-checkboxes">
+                        <label><input type="checkbox" id="humpback-checkbox"> Humpback</label>
+                        <label><input type="checkbox" id="minke-checkbox"> Minke</label>
+                        <label><input type="checkbox" id="bowhead-checkbox"> Bowhead</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Support</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Follow Us</a>
+        </div>
+    </footer>
+
+    <script src="java/map.js"></script>
+</body>
+</html>
