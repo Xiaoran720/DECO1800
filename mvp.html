@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="DECO1800.css/base.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
     <style>
-
         body {
             font-family: Arial, sans-serif;
         }
@@ -70,6 +69,14 @@
             text-decoration: none;
             color: #333;
         }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .filter-checkboxes label {
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +94,7 @@
     <main>
         <!-- 地图部分 -->
         <section class="map-section">
-            <h1>Map of Whales Strandings and Sightings</h1>
+            <h1>Map of Whale Strandings and Sightings</h1>
             <p>Use the map below to explore whale strandings and sightings in Australia.</p>
             <div class="map-container">
                 <!-- 放置交互地图 -->
@@ -95,24 +102,23 @@
             </div>
         </section>
 
+        <!-- 时间轴控制部分 -->
+        <section class="controls">
+            <label for="timeSlider1">Start Year:</label>
+            <input type="range" id="timeSlider1" min="1980" max="2020" value="1980">
+            <span id="startYear">1980</span>
+
+            <label for="timeSlider2">End Year:</label>
+            <input type="range" id="timeSlider2" min="1980" max="2020" value="2020">
+            <span id="endYear">2020</span>
+        </section>
+
         <!-- 筛选器部分 -->
         <section class="filter-section">
             <h2>Filter</h2>
             <div class="filter-options">
-                <div class="activity-type">
-                    <h3>Types of Activity</h3>
-                    <div class="activity-checkboxes">
-                        <label><input type="checkbox" id="strandings-checkbox" checked> Strandings</label>
-                        <label><input type="checkbox" id="sightings-checkbox" checked> Sightings</label>
-                    </div>
-                </div>
-                <div class="whale-type">
-                    <h3>Types of Whales</h3>
-                    <div class="whale-checkboxes">
-                        <label><input type="checkbox" id="humpback-checkbox" checked> Humpback</label>
-                        <label><input type="checkbox" id="minke-checkbox" checked> Minke</label>
-                        <label><input type="checkbox" id="bowhead-checkbox" checked> Bowhead</label>
-                    </div>
+                <div id="filter-checkboxes" class="filter-checkboxes">
+                    <!-- 动态生成的复选框将在这里 -->
                 </div>
             </div>
         </section>
@@ -127,27 +133,116 @@
         </div>
     </footer>
 
+    <!-- 引入 Mapbox JavaScript -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoibHlsNTI1IiwiYSI6ImNtMHg3dDl5dzA5bDcycnB5ZzluZzRueXUifQ.P5n5ikx90MtIu4-NzSEmgQ';
 
+        // 初始化 Mapbox 地图
         var map = new mapboxgl.Map({
-            container: 'map', 
-            style: 'mapbox://styles/mapbox/streets-v11', 
-            center: [133.7751, -25.2744], 
-            zoom: 4,
+            container: 'map', // 绑定地图到id为map的HTML元素
+            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式
+            center: [133.7751, -25.2744], // 澳大利亚的中心点
+            zoom: 4 // 设置缩放级别
         });
 
+        var markers = {}; // 用于存储标记信息
+        var whaleSpecies = new Set(); // 用于存储独特的鲸鱼常见名称
 
-        new mapboxgl.Marker()
-            .setLngLat([153.021072, -27.470125]) 
-            .setPopup(new mapboxgl.Popup().setHTML("<h3>Whale Stranding</h3><p>Location: Brisbane</p>")) // 添加弹出信息窗口
-            .addTo(map);
+        // 当前时间范围
+        var startYear = 1980;
+        var endYear = 2020;
 
-        new mapboxgl.Marker({ color: 'red' })
-            .setLngLat([151.2093, -33.8688]) 
-            .setPopup(new mapboxgl.Popup().setHTML("<h3>Whale Sighting</h3><p>Location: Sydney</p>")) // 添加弹出信息窗口
-            .addTo(map);
+        // 加载数据集并解析
+        fetch('Whale_dataset.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const commonName = item['Southern Right Whale']; // 提取常见名称
+                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; // 提取 UUID
+                    const latitude = parseFloat(item['-32.2']); // 纬度
+                    const longitude = parseFloat(item['115.7']); // 经度
+                    const year = parseInt(item['1987']); // 提取年份
+
+                    // 确保数据完整
+                    if (uuid && commonName && latitude && longitude && year) {
+                        whaleSpecies.add(commonName); // 将常见名称添加到 Set 中
+
+                        // 创建地图标记
+                        var marker = new mapboxgl.Marker()
+                            .setLngLat([longitude, latitude])
+                            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${commonName}</h3><p>Year: ${year}</p>`)) // 弹出窗口显示常见名称
+                            .addTo(map);
+
+                        markers[uuid] = {
+                            marker: marker,
+                            commonName: commonName,
+                            year: year
+                        };
+                    }
+                });
+
+                // 动态生成过滤器复选框
+                generateFilterCheckboxes();
+                updateMarkers(); // 初始更新标记
+            });
+
+        // 动态生成过滤器复选框
+        function generateFilterCheckboxes() {
+            const filterContainer = document.getElementById('filter-checkboxes');
+            whaleSpecies.forEach(species => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = true; // 默认所有复选框都选中
+                checkbox.value = species;
+                checkbox.addEventListener('change', updateMarkers); // 当用户更改复选框状态时更新标记
+
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(species));
+                filterContainer.appendChild(label);
+            });
+        }
+
+        // 更新标记显示，同时应用时间和物种过滤器
+        function updateMarkers() {
+            const selectedSpecies = new Set(
+                Array.from(document.querySelectorAll('#filter-checkboxes input:checked')).map(cb => cb.value)
+            );
+
+            Object.keys(markers).forEach(uuid => {
+                const markerObj = markers[uuid];
+                const markerSpecies = markerObj.commonName;
+                const markerYear = markerObj.year;
+
+                // 只显示同时满足物种筛选和时间筛选的标记
+                if (selectedSpecies.has(markerSpecies) && markerYear >= startYear && markerYear <= endYear) {
+                    markerObj.marker.addTo(map);
+                } else {
+                    markerObj.marker.remove();
+                }
+            });
+        }
+
+        // 获取时间滑块元素并添加事件监听器
+        const timeSlider1 = document.getElementById('timeSlider1');
+        const timeSlider2 = document.getElementById('timeSlider2');
+        const startYearDisplay = document.getElementById('startYear');
+        const endYearDisplay = document.getElementById('endYear');
+
+        // 监听时间滑块的变化
+        timeSlider1.addEventListener('input', function () {
+            startYear = parseInt(this.value);
+            startYearDisplay.textContent = startYear;
+            updateMarkers(); // 更新标记显示
+        });
+
+        timeSlider2.addEventListener('input', function () {
+            endYear = parseInt(this.value);
+            endYearDisplay.textContent = endYear;
+            updateMarkers(); // 更新标记显示
+        });
+
     </script>
 
 </body>
