@@ -13,7 +13,8 @@
       "default",
       {
         "ignore": [
-          "-moz-user-select"
+          "-moz-user-select",
+          "-ms-zoom"
         ]
       }
     ]
