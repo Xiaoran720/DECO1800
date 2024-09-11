@@ -3,112 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map with Whale Sightings and Strandings</title>
-    <!-- 引入 Mapbox CSS -->
+    <title>Map of Whale Strandings and Sightings</title>
+    <link rel="stylesheet" href="DECO1800.css/base.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
     <style>
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+        }
+        header nav ul {
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+        }
+        header nav ul li {
+            margin-right: 20px;
+        }
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        header .login {
+            color: #fff;
+            text-decoration: none;
+        }
+        main {
+            padding: 20px;
+        }
+        .map-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .map-container {
+            height: 500px; 
+            width: 100%;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
         #map {
-            height: 80vh;
+            height: 100%;
             width: 100%;
         }
+        .filter-section {
+            margin-top: 30px;
+        }
+        .filter-options {
+            display: flex;
+            justify-content: space-around;
+        }
+        .footer-links {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #f1f1f1;
+        }
+        .footer-links a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: #333;
+        }
         .controls {
-            margin: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .filter-checkboxes label {
+            margin-right: 15px;
         }
     </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Whales Knowledge Base</a></li>
+                <li><a href="#">Interactive Map</a></li>
+            </ul>
+            <input type="text" placeholder="Search..." id="search-box">
+            <a href="#" class="login">Login</a>
+        </nav>
+    </header>
 
-    
-    <h1>Map of Whale Strandings and Sightings</h1>
-    <div class="controls">
-        <label for="timeSlider1">Start Year:</label>
-        <input type="range" id="timeSlider1" min="1980" max="2020" value="1980">
-        <span id="startYear">1980</span>
+    <main>
+        <!-- 地图部分 -->
+        <section class="map-section">
+            <h1>Map of Whales Strandings and Sightings</h1>
+            <p>Use the map below to explore whale strandings and sightings in Australia.</p>
+            <div class="map-container">
+                <!-- 放置交互地图 -->
+                <div id="map"></div>
+            </div>
+        </section>
 
-        <label for="timeSlider2">End Year:</label>
-        <input type="range" id="timeSlider2" min="1980" max="2020" value="2020">
-        <span id="endYear">2020</span>
-    </div>
+        <!-- 时间轴控制部分 -->
+        <section class="controls">
+            <label for="timeSlider1">Start Year:</label>
+            <input type="range" id="timeSlider1" min="1980" max="2020" value="1980">
+            <span id="startYear">1980</span>
 
-    <!-- 地图容器 -->
-    <div id="map"></div>
+            <label for="timeSlider2">End Year:</label>
+            <input type="range" id="timeSlider2" min="1980" max="2020" value="2020">
+            <span id="endYear">2020</span>
+        </section>
+
+        <!-- 筛选器部分 -->
+        <section class="filter-section">
+            <h2>Filter</h2>
+            <div class="filter-options">
+                <div id="filter-checkboxes" class="filter-checkboxes">
+                    <!-- 动态生成的复选框将在这里 -->
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Support</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Follow Us</a>
+        </div>
+    </footer>
 
     <!-- 引入 Mapbox JavaScript -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <script>
-        // 使用你的 Mapbox 公有令牌
         mapboxgl.accessToken = 'pk.eyJ1IjoibHlsNTI1IiwiYSI6ImNtMHg3dDl5dzA5bDcycnB5ZzluZzRueXUifQ.P5n5ikx90MtIu4-NzSEmgQ';
 
         // 初始化 Mapbox 地图
         var map = new mapboxgl.Map({
             container: 'map', // 绑定地图到id为map的HTML元素
-            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式 (街道视图)
+            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式
             center: [133.7751, -25.2744], // 澳大利亚的中心点
             zoom: 4 // 设置缩放级别
         });
 
         var markers = {}; // 用于存储标记信息
+        var whaleSpecies = new Set(); // 用于存储独特的鲸鱼常见名称
+
+        // 当前时间范围
+        var startYear = 1980;
+        var endYear = 2020;
 
         // 加载数据集并解析
         fetch('Whale_dataset.json')
             .then(response => response.json())
             .then(data => {
                 data.forEach(item => {
-                    const year = parseInt(item['1987']); // 提取年份
-                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; // 提取 UUID
                     const commonName = item['Southern Right Whale']; // 提取常见名称
+                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; // 提取 UUID
                     const latitude = parseFloat(item['-32.2']); // 纬度
                     const longitude = parseFloat(item['115.7']); // 经度
+                    const year = parseInt(item['1987']); // 提取年份
 
-                    // 检查数据是否完整
+                    // 确保数据完整
                     if (uuid && commonName && latitude && longitude && year) {
+                        whaleSpecies.add(commonName); // 将常见名称添加到 Set 中
+
                         // 创建地图标记
                         var marker = new mapboxgl.Marker()
                             .setLngLat([longitude, latitude])
-                            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${commonName}</h3>`))
+                            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${commonName}</h3><p>Year: ${year}</p>`)) // 弹出窗口显示常见名称
                             .addTo(map);
 
-                        // 将标记存储到 markers 对象中
                         markers[uuid] = {
                             marker: marker,
+                            commonName: commonName,
                             year: year
                         };
                     }
                 });
 
-                // 初始化标记更新
-                updateMarkers();
+                // 动态生成过滤器复选框
+                generateFilterCheckboxes();
+                updateMarkers(); // 初始更新标记
             });
 
-        // 获取滑块元素
+        // 动态生成过滤器复选框
+        function generateFilterCheckboxes() {
+            const filterContainer = document.getElementById('filter-checkboxes');
+            whaleSpecies.forEach(species => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = true; // 默认所有复选框都选中
+                checkbox.value = species;
+                checkbox.addEventListener('change', updateMarkers); // 当用户更改复选框状态时更新标记
+
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(species));
+                filterContainer.appendChild(label);
+            });
+        }
+
+        // 更新标记显示，同时应用时间和物种过滤器
+        function updateMarkers() {
+            const selectedSpecies = new Set(
+                Array.from(document.querySelectorAll('#filter-checkboxes input:checked')).map(cb => cb.value)
+            );
+
+            Object.keys(markers).forEach(uuid => {
+                const markerObj = markers[uuid];
+                const markerSpecies = markerObj.commonName;
+                const markerYear = markerObj.year;
+
+                // 只显示同时满足物种筛选和时间筛选的标记
+                if (selectedSpecies.has(markerSpecies) && markerYear >= startYear && markerYear <= endYear) {
+                    markerObj.marker.addTo(map);
+                } else {
+                    markerObj.marker.remove();
+                }
+            });
+        }
+
+        // 获取时间滑块元素并添加事件监听器
         const timeSlider1 = document.getElementById('timeSlider1');
         const timeSlider2 = document.getElementById('timeSlider2');
         const startYearDisplay = document.getElementById('startYear');
         const endYearDisplay = document.getElementById('endYear');
 
-        // 更新标记显示
-        function updateMarkers() {
-            const startYear = parseInt(timeSlider1.value);
-            const endYear = parseInt(timeSlider2.value);
+        // 监听时间滑块的变化
+        timeSlider1.addEventListener('input', function () {
+            startYear = parseInt(this.value);
             startYearDisplay.textContent = startYear;
+            updateMarkers(); // 更新标记显示
+        });
+
+        timeSlider2.addEventListener('input', function () {
+            endYear = parseInt(this.value);
             endYearDisplay.textContent = endYear;
-
-            // 遍历标记，显示符合时间范围的标记
-            Object.keys(markers).forEach(uuid => {
-                const markerObj = markers[uuid];
-                const markerYear = markerObj.year;
-
-                if (markerYear >= startYear && markerYear <= endYear) {
-                    markerObj.marker.addTo(map); // 显示标记
-                } else {
-                    markerObj.marker.remove(); // 隐藏标记
-                }
-            });
-        }
-
-        // 为滑块绑定事件监听器
-        timeSlider1.addEventListener('input', updateMarkers);
-        timeSlider2.addEventListener('input', updateMarkers);
+            updateMarkers(); // 更新标记显示
+        });
 
     </script>
 
