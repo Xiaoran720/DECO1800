@@ -3,53 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapbox Map with Time Slider and Marker Filter</title>
-
+    <title>Map with Whale Sightings and Strandings</title>
     <!-- 引入 Mapbox CSS -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
-    
     <style>
         #map {
             height: 80vh;
-            width: 80vw;
-            margin-bottom: 20px;
+            width: 100%;
         }
-        #controls {
-            margin: 10px;
-        }
-        #time-slider-container {
-            margin-top: 20px;
-        }
-        #time-slider1,
-        #time-slider2 {
-            width: 300px; /* 设置滑块的宽度，确保其可见 */
-        }
-        #timeRange {
-            margin-left: 10px;
+        .controls {
+            margin: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h3>Mapbox Map with Time Slider and Marker Filter</h3>
+    <h1>Map of Whale Strandings and Sightings</h1>
+    <div class="controls">
+        <label for="timeSlider1">Start Year:</label>
+        <input type="range" id="timeSlider1" min="1980" max="2020" value="1980">
+        <span id="startYear">1980</span>
 
-    <!-- 筛选器 -->
-    <div id="controls">
-        <!-- 标记筛选复选框 -->
-        <div id="filters">
-            <input type="checkbox" id="brisbane" checked> Brisbane<br>
-            <input type="checkbox" id="southbank" checked> South Bank Parklands<br>
-            <input type="checkbox" id="koala" checked> Lone Pine Koala Sanctuary<br>
-            <input type="checkbox" id="lookout" checked> Mount Coot-Tha Lookout<br>
-        </div>
-
-        <!-- 时间轴 (双滑块) -->
-        <div id="time-slider-container">
-            <label for="timeSlider">Time range:</label><br>
-            <input type="range" id="timeSlider1" min="2010" max="2020" value="2010">
-            <input type="range" id="timeSlider2" min="2010" max="2020" value="2020">
-            <span id="timeRange">2010 - 2020</span>
-        </div>
+        <label for="timeSlider2">End Year:</label>
+        <input type="range" id="timeSlider2" min="1980" max="2020" value="2020">
+        <span id="endYear">2020</span>
     </div>
 
     <!-- 地图容器 -->
@@ -57,7 +34,6 @@
 
     <!-- 引入 Mapbox JavaScript -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-
     <script>
         // 使用你的 Mapbox 公有令牌
         mapboxgl.accessToken = 'pk.eyJ1IjoibHlsNTI1IiwiYSI6ImNtMHg3dDl5dzA5bDcycnB5ZzluZzRueXUifQ.P5n5ikx90MtIu4-NzSEmgQ';
@@ -65,50 +41,74 @@
         // 初始化 Mapbox 地图
         var map = new mapboxgl.Map({
             container: 'map', // 绑定地图到id为map的HTML元素
-            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式
-            center: [153.021072, -27.470125], // 布里斯班的经纬度
-            zoom: 12 // 设置缩放级别
+            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式 (街道视图)
+            center: [133.7751, -25.2744], // 澳大利亚的中心点
+            zoom: 4 // 设置缩放级别
         });
 
-        // 创建标记并添加时间戳
-        var markers = {
-            brisbane: { marker: new mapboxgl.Marker().setLngLat([153.021072, -27.470125]).setPopup(new mapboxgl.Popup().setHTML("<h3>Brisbane City</h3><p>2012</p>")), year: 2012 },
-            southbank: { marker: new mapboxgl.Marker({ color: 'red' }).setLngLat([153.027797, -27.481929]).setPopup(new mapboxgl.Popup().setHTML("<h3>South Bank Parklands</h3><p>2014</p>")), year: 2014 },
-            koala: { marker: new mapboxgl.Marker({ color: 'green' }).setLngLat([152.957004, -27.531335]).setPopup(new mapboxgl.Popup().setHTML("<h3>Lone Pine Koala Sanctuary</h3><p>2018</p>")), year: 2018 },
-            lookout: { marker: new mapboxgl.Marker({ color: 'blue' }).setLngLat([152.951895, -27.469770]).setPopup(new mapboxgl.Popup().setHTML("<h3>Mount Coot-Tha Lookout</h3><p>2018</p>")), year: 2018 }
-        };
+        var markers = {}; // 用于存储标记信息
 
-        // 显示或隐藏标记的函数，结合时间范围和复选框状态
-        function toggleMarkers() {
-            var startYear = parseInt(document.getElementById('timeSlider1').value);
-            var endYear = parseInt(document.getElementById('timeSlider2').value);
+        // 加载数据集并解析
+        fetch('Whale_dataset.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const year = parseInt(item['1987']); // 提取年份
+                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; // 提取 UUID
+                    const commonName = item['Southern Right Whale']; // 提取常见名称
+                    const latitude = parseFloat(item['-32.2']); // 纬度
+                    const longitude = parseFloat(item['115.7']); // 经度
 
-            // 更新时间范围显示
-            document.getElementById('timeRange').textContent = startYear + ' - ' + endYear;
+                    // 检查数据是否完整
+                    if (uuid && commonName && latitude && longitude && year) {
+                        // 创建地图标记
+                        var marker = new mapboxgl.Marker()
+                            .setLngLat([longitude, latitude])
+                            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${commonName}</h3>`))
+                            .addTo(map);
 
-            Object.keys(markers).forEach(function(key) {
-                var isChecked = document.getElementById(key).checked;
-                var markerYear = markers[key].year;
-                if (isChecked && markerYear >= startYear && markerYear <= endYear) {
-                    markers[key].marker.addTo(map); // 显示标记
+                        // 将标记存储到 markers 对象中
+                        markers[uuid] = {
+                            marker: marker,
+                            year: year
+                        };
+                    }
+                });
+
+                // 初始化标记更新
+                updateMarkers();
+            });
+
+        // 获取滑块元素
+        const timeSlider1 = document.getElementById('timeSlider1');
+        const timeSlider2 = document.getElementById('timeSlider2');
+        const startYearDisplay = document.getElementById('startYear');
+        const endYearDisplay = document.getElementById('endYear');
+
+        // 更新标记显示
+        function updateMarkers() {
+            const startYear = parseInt(timeSlider1.value);
+            const endYear = parseInt(timeSlider2.value);
+            startYearDisplay.textContent = startYear;
+            endYearDisplay.textContent = endYear;
+
+            // 遍历标记，显示符合时间范围的标记
+            Object.keys(markers).forEach(uuid => {
+                const markerObj = markers[uuid];
+                const markerYear = markerObj.year;
+
+                if (markerYear >= startYear && markerYear <= endYear) {
+                    markerObj.marker.addTo(map); // 显示标记
                 } else {
-                    markers[key].marker.remove(); // 隐藏标记
+                    markerObj.marker.remove(); // 隐藏标记
                 }
             });
         }
 
-        // 绑定复选框事件监听器
-        document.getElementById('brisbane').addEventListener('change', toggleMarkers);
-        document.getElementById('southbank').addEventListener('change', toggleMarkers);
-        document.getElementById('koala').addEventListener('change', toggleMarkers);
-        document.getElementById('lookout').addEventListener('change', toggleMarkers);
+        // 为滑块绑定事件监听器
+        timeSlider1.addEventListener('input', updateMarkers);
+        timeSlider2.addEventListener('input', updateMarkers);
 
-        // 绑定时间滑块事件监听器
-        document.getElementById('timeSlider1').addEventListener('input', toggleMarkers);
-        document.getElementById('timeSlider2').addEventListener('input', toggleMarkers);
-
-        // 初始化时调用
-        toggleMarkers();
     </script>
 
 </body>
