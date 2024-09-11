@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map of Whale Strandings and Sightings</title>
     <link rel="stylesheet" href="DECO1800.css/base.css">
-    <!-- 引入 Mapbox CSS -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
     <style>
-        /* 自定义样式确保地图与页面其他部分协调一致 */
+
         body {
             font-family: Arial, sans-serif;
         }
@@ -44,13 +43,13 @@
             text-align: center;
         }
         .map-container {
-            height: 500px; /* 确保地图区域有足够的高度 */
+            height: 500px; 
             width: 100%;
             margin: 0 auto;
-            max-width: 1200px; /* 限制地图最大宽度，适应不同屏幕 */
+            max-width: 1200px;
         }
         #map {
-            height: 100%; /* 让地图填满容器 */
+            height: 100%;
             width: 100%;
         }
         .filter-section {
@@ -128,28 +127,25 @@
         </div>
     </footer>
 
-    <!-- 引入 Mapbox JavaScript -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <script>
-        // 使用你的 Mapbox 公有令牌
         mapboxgl.accessToken = 'pk.eyJ1IjoibHlsNTI1IiwiYSI6ImNtMHg3dDl5dzA5bDcycnB5ZzluZzRueXUifQ.P5n5ikx90MtIu4-NzSEmgQ';
 
-        // 初始化 Mapbox 地图
         var map = new mapboxgl.Map({
-            container: 'map', // 绑定地图到id为map的HTML元素
-            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式 (街道视图)
-            center: [133.7751, -25.2744], // 澳大利亚的中心点
-            zoom: 4 // 设置缩放级别
+            container: 'map', 
+            style: 'mapbox://styles/mapbox/streets-v11', 
+            center: [133.7751, -25.2744], 
+            zoom: 4,
         });
 
-        // 示例标记
+
         new mapboxgl.Marker()
-            .setLngLat([153.021072, -27.470125]) // 设置标记位置
+            .setLngLat([153.021072, -27.470125]) 
             .setPopup(new mapboxgl.Popup().setHTML("<h3>Whale Stranding</h3><p>Location: Brisbane</p>")) // 添加弹出信息窗口
             .addTo(map);
 
         new mapboxgl.Marker({ color: 'red' })
-            .setLngLat([151.2093, -33.8688]) // 设置标记位置
+            .setLngLat([151.2093, -33.8688]) 
             .setPopup(new mapboxgl.Popup().setHTML("<h3>Whale Sighting</h3><p>Location: Sydney</p>")) // 添加弹出信息窗口
             .addTo(map);
     </script>
