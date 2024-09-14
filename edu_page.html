@@ -43,10 +43,41 @@
             color: black;
             text-decoration: underline;
         }
-        #search-box {
+
+        form.search-box input[type=text] {
+            padding: 10px;
+            font-size: 12px;
+            width: 80%;
+            background: #f1f1f1;
+        }
+        .search-box {
+            display: flex; 
+            justify-content: center; 
             width: 20vw;
             margin-right: -600px;
         }
+        
+        form.search-box button {
+            border-radius: 5px;
+            float: right;
+            text-align: center;
+            width: 20%;
+            font-size: 12px;
+            border: 1px solid grey;
+            border-left: none; 
+            cursor: pointer;
+        }
+
+        form.search-box button:hover {
+            background: #0b7dda;
+        }
+
+        form.search-box::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
         header .login {
             color: #fff;
             text-decoration: none;
@@ -148,7 +179,10 @@
                 <li><a href="edu_page.html">Whales Knowledge Base</a></li>
                 <li><a href="mvp.html">Interactive Map</a></li>
             </ul>
-            <input type="text" placeholder="Search..." id="search-box">
+                <form class="search-box" action="action_page.php">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit">Search<i class="fa fa-search"></i></button>
+                </form>
             <a href="#" class="login">Login</a>
         </nav>
     </header>
