@@ -11,28 +11,39 @@
             font-family: Arial, sans-serif;
         }
         header nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
             color: #fff;
         }
         header nav ul {
-            display: flex;
-            list-style-type: none;
+            list-style: none; 
             padding: 0;
+            margin: 0;
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
         }
-        header nav ul li {
-            margin-right: 20px;
+        header nav li {
+            font-size: 18px;
         }
-        header nav ul li a {
-            color: #fff;
-            text-decoration: none;
+        header nav li a {
+            display: block;
+            text-decoration: None;
+            color: white;
+            padding: 5px 10px;
+        }
+        header nav li a:hover {
+            color: black;
+        }
+        #search-box {
+            width: 20vw;
+            margin-right: -600px;
         }
         header .login {
             color: #fff;
             text-decoration: none;
+            margin-right: 10px;
         }
         main {
             padding: 20px;
