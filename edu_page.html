@@ -41,11 +41,43 @@
         }
         header nav li a:hover {
             color: black;
+            text-decoration: underline;
         }
-        #search-box {
+
+        form.search-box input[type=text] {
+            padding: 10px;
+            font-size: 12px;
+            width: 80%;
+            background: #f1f1f1;
+        }
+        .search-box {
+            display: flex; 
+            justify-content: center; 
             width: 20vw;
             margin-right: -600px;
         }
+        
+        form.search-box button {
+            border-radius: 5px;
+            float: right;
+            text-align: center;
+            width: 20%;
+            font-size: 12px;
+            border: 1px solid grey;
+            border-left: none; 
+            cursor: pointer;
+        }
+
+        form.search-box button:hover {
+            background: #0b7dda;
+        }
+
+        form.search-box::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
         header .login {
             color: #fff;
             text-decoration: none;
@@ -127,6 +159,7 @@
         }
         footer div a:hover {
             color: black;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -146,7 +179,10 @@
                 <li><a href="edu_page.html">Whales Knowledge Base</a></li>
                 <li><a href="mvp.html">Interactive Map</a></li>
             </ul>
-            <input type="text" placeholder="Search..." id="search-box">
+                <form class="search-box" action="action_page.php">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit">Search<i class="fa fa-search"></i></button>
+                </form>
             <a href="#" class="login">Login</a>
         </nav>
     </header>
@@ -156,19 +192,27 @@
             <h1>Types of Whales</h1>
             <div class="whale-grid">
                 <div class="whale">
-                    <img src="image/Humpack.jpg" alt="Humpback Whale">
+                    <a href="https://en.wikipedia.org/wiki/Humpback_whale">
+                        <img src="image/Humpack.jpg" alt="Humpback Whale" href="">
+                    </a>
                     <p>Humpback Whales</p>
                 </div>
                 <div class="whale">
-                    <img src="image/Minke.jpg" alt="Minke Whale">
+                    <a href="https://en.wikipedia.org/wiki/Minke_whale">
+                        <img src="image/Minke.jpg" alt="Minke Whale">
+                    </a>
                     <p>Minke Whale</p>
                 </div>
                 <div class="whale">
-                    <img src="image/Southern Right Whale.jpg" alt="Southern Right Whale">
+                    <a href="https://en.wikipedia.org/wiki/Southern_right_whale">
+                        <img src="image/Southern Right Whale.jpg" alt="Southern Right Whale">
+                    </a>
                     <p>Southern Right Whale</p>
                 </div>
                 <div class="whale">
-                    <img src="image/Bowhead Whale.jpg" alt="Bowhead Whale">
+                    <a href="https://en.wikipedia.org/wiki/Bowhead_whale">
+                        <img src="image/Bowhead Whale.jpg" alt="Bowhead Whale">
+                    </a>
                     <p>Bowhead Whales</p>
                 </div>
                 <div class="whale">
