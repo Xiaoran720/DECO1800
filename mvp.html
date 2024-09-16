@@ -151,7 +151,7 @@
         var endYear = 2020;
 
     
-        fetch('Whale_dataset.json')
+        fetch('http://127.0.0.1:5500/Whale_dataset.json')
             .then(response => response.json())
             .then(data => {
                 data.forEach(item => {
