@@ -10,11 +10,19 @@
         body {
             font-family: Arial, sans-serif;
         }
+        header nav li.mvp {
+            color: black;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 8px;
+        }
+        header nav li.mvp a {
+            color: black;
+        }
         header nav {
             text-align: center;
             margin: 0;
             padding: 10px;
-            color: #fff;
         }
         header nav ul {
             list-style: none; 
@@ -25,15 +33,16 @@
             gap: 20px; 
         }
         header nav li {
-            font-size: 18px;
-        }
-        header nav li a {
             display: block;
-            text-decoration: None;
-            color: white;
+            font-size: 18px;
             padding: 5px 10px;
+            text-decoration: None;
         }
-        header nav li a:hover {
+        header nav li.edu_page {
+            color: white;
+            
+        }
+        header nav li.edu_page a:hover {
             color: black;
             text-decoration: underline;
         }
@@ -128,8 +137,8 @@
     <header>
         <nav>
             <ul>
-                <li><a href="edu_page.html">Whales Knowledge Base</a></li>
-                <li><a href="mvp.html">Interactive Map</a></li>
+                <li  class="edu_page"><a href="edu_page.html">Whales Knowledge Base</a></li>
+                <li class="mvp"><a href="mvp.html">Interactive Map</a></li>
             </ul>
                 <form class="search-box" action="action_page.php">
                     <input type="text" placeholder="Search.." name="search">
