@@ -11,28 +11,71 @@
             font-family: Arial, sans-serif;
         }
         header nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
             color: #fff;
         }
         header nav ul {
-            display: flex;
-            list-style-type: none;
+            list-style: none; 
             padding: 0;
+            margin: 0;
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
         }
-        header nav ul li {
-            margin-right: 20px;
+        header nav li {
+            font-size: 18px;
         }
-        header nav ul li a {
-            color: #fff;
-            text-decoration: none;
+        header nav li a {
+            display: block;
+            text-decoration: None;
+            color: white;
+            padding: 5px 10px;
         }
+        header nav li a:hover {
+            color: black;
+            text-decoration: underline;
+        }
+
+        form.search-box input[type=text] {
+            padding: 10px;
+            font-size: 12px;
+            width: 80%;
+            background: #f1f1f1;
+        }
+        .search-box {
+            display: flex; 
+            justify-content: center; 
+            width: 20vw;
+            margin-right: -600px;
+        }
+        
+        form.search-box button {
+            border-radius: 5px;
+            float: right;
+            text-align: center;
+            width: 20%;
+            font-size: 12px;
+            border: 1px solid grey;
+            border-left: none; 
+            cursor: pointer;
+        }
+
+        form.search-box button:hover {
+            background: #0b7dda;
+        }
+
+        form.search-box::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
         header .login {
             color: #fff;
             text-decoration: none;
+            margin-right: 10px;
         }
         main {
             padding: 20px;
@@ -83,10 +126,13 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#">Whales Knowledge Base</a></li>
-                <li><a href="#">Interactive Map</a></li>
+                <li><a href="edu_page.html">Whales Knowledge Base</a></li>
+                <li><a href="mvp.html">Interactive Map</a></li>
             </ul>
-            <input type="text" placeholder="Search..." id="search-box">
+                <form class="search-box" action="action_page.php">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit">Search<i class="fa fa-search"></i></button>
+                </form>
             <a href="#" class="login">Login</a>
         </nav>
     </header>
