@@ -11,39 +11,28 @@
             font-family: Arial, sans-serif;
         }
         header nav {
-            text-align: center;
-            margin: 0;
-            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
             color: #fff;
         }
         header nav ul {
-            list-style: none; 
+            display: flex;
+            list-style-type: none;
             padding: 0;
-            margin: 0;
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
         }
-        header nav li {
-            font-size: 18px;
+        header nav ul li {
+            margin-right: 20px;
         }
-        header nav li a {
-            display: block;
-            text-decoration: None;
-            color: white;
-            padding: 5px 10px;
-        }
-        header nav li a:hover {
-            color: black;
-        }
-        #search-box {
-            width: 20vw;
-            margin-right: -600px;
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
         }
         header .login {
             color: #fff;
             text-decoration: none;
-            margin-right: 10px;
         }
         main {
             padding: 20px;
@@ -94,8 +83,8 @@
     <header>
         <nav>
             <ul>
-                <li><a href="edu_page.html">Whales Knowledge Base</a></li>
-                <li><a href="mvp.html">Interactive Map</a></li>
+                <li><a href="#">Whales Knowledge Base</a></li>
+                <li><a href="#">Interactive Map</a></li>
             </ul>
             <input type="text" placeholder="Search..." id="search-box">
             <a href="#" class="login">Login</a>
@@ -103,17 +92,15 @@
     </header>
 
     <main>
-        <!-- 地图部分 -->
         <section class="map-section">
             <h1>Map of Whale Strandings and Sightings</h1>
             <p>Use the map below to explore whale strandings and sightings in Australia.</p>
             <div class="map-container">
-                <!-- 放置交互地图 -->
                 <div id="map"></div>
             </div>
         </section>
 
-        <!-- 时间轴控制部分 -->
+     
         <section class="controls">
             <label for="timeSlider1">Start Year:</label>
             <input type="range" id="timeSlider1" min="1980" max="2020" value="1980">
@@ -124,12 +111,12 @@
             <span id="endYear">2020</span>
         </section>
 
-        <!-- 筛选器部分 -->
+      
         <section class="filter-section">
             <h2>Filter</h2>
             <div class="filter-options">
                 <div id="filter-checkboxes" class="filter-checkboxes">
-                    <!-- 动态生成的复选框将在这里 -->
+                    
                 </div>
             </div>
         </section>
@@ -144,42 +131,41 @@
         </div>
     </footer>
 
-    <!-- 引入 Mapbox JavaScript -->
+  
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoibHlsNTI1IiwiYSI6ImNtMHg3dDl5dzA5bDcycnB5ZzluZzRueXUifQ.P5n5ikx90MtIu4-NzSEmgQ';
 
-        // 初始化 Mapbox 地图
         var map = new mapboxgl.Map({
-            container: 'map', // 绑定地图到id为map的HTML元素
-            style: 'mapbox://styles/mapbox/streets-v11', // 地图样式
-            center: [133.7751, -25.2744], // 澳大利亚的中心点
-            zoom: 4 // 设置缩放级别
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11', 
+            center: [133.7751, -25.2744], 
+            zoom: 4 
         });
 
-        var markers = {}; // 用于存储标记信息
-        var whaleSpecies = new Set(); // 用于存储独特的鲸鱼常见名称
+        var markers = {}; 
+        var whaleSpecies = new Set(); 
 
-        // 当前时间范围
+    
         var startYear = 1980;
         var endYear = 2020;
 
-        // 加载数据集并解析
+    
         fetch('Whale_dataset.json')
             .then(response => response.json())
             .then(data => {
                 data.forEach(item => {
-                    const commonName = item['Southern Right Whale']; // 提取常见名称
-                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; // 提取 UUID
-                    const latitude = parseFloat(item['-32.2']); // 纬度
-                    const longitude = parseFloat(item['115.7']); // 经度
-                    const year = parseInt(item['1987']); // 提取年份
+                    const commonName = item['Southern Right Whale']; 
+                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; 
+                    const latitude = parseFloat(item['-32.2']); 
+                    const longitude = parseFloat(item['115.7']); 
+                    const year = parseInt(item['1987']); 
 
-                    // 确保数据完整
+               
                     if (uuid && commonName && latitude && longitude && year) {
-                        whaleSpecies.add(commonName); // 将常见名称添加到 Set 中
+                        whaleSpecies.add(commonName);
 
-                        // 创建地图标记
+                     
                         var marker = new mapboxgl.Marker()
                             .setLngLat([longitude, latitude])
                             .setPopup(new mapboxgl.Popup().setHTML(`<h3>${commonName}</h3><p>Year: ${year}</p>`)) // 弹出窗口显示常见名称
@@ -193,21 +179,20 @@
                     }
                 });
 
-                // 动态生成过滤器复选框
+           
                 generateFilterCheckboxes();
-                updateMarkers(); // 初始更新标记
+                updateMarkers(); 
             });
 
-        // 动态生成过滤器复选框
         function generateFilterCheckboxes() {
             const filterContainer = document.getElementById('filter-checkboxes');
             whaleSpecies.forEach(species => {
                 const label = document.createElement('label');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
-                checkbox.checked = true; // 默认所有复选框都选中
+                checkbox.checked = true; 
                 checkbox.value = species;
-                checkbox.addEventListener('change', updateMarkers); // 当用户更改复选框状态时更新标记
+                checkbox.addEventListener('change', updateMarkers); 
 
                 label.appendChild(checkbox);
                 label.appendChild(document.createTextNode(species));
@@ -215,7 +200,7 @@
             });
         }
 
-        // 更新标记显示，同时应用时间和物种过滤器
+   
         function updateMarkers() {
             const selectedSpecies = new Set(
                 Array.from(document.querySelectorAll('#filter-checkboxes input:checked')).map(cb => cb.value)
@@ -226,7 +211,7 @@
                 const markerSpecies = markerObj.commonName;
                 const markerYear = markerObj.year;
 
-                // 只显示同时满足物种筛选和时间筛选的标记
+          
                 if (selectedSpecies.has(markerSpecies) && markerYear >= startYear && markerYear <= endYear) {
                     markerObj.marker.addTo(map);
                 } else {
@@ -235,23 +220,22 @@
             });
         }
 
-        // 获取时间滑块元素并添加事件监听器
         const timeSlider1 = document.getElementById('timeSlider1');
         const timeSlider2 = document.getElementById('timeSlider2');
         const startYearDisplay = document.getElementById('startYear');
         const endYearDisplay = document.getElementById('endYear');
 
-        // 监听时间滑块的变化
+        
         timeSlider1.addEventListener('input', function () {
             startYear = parseInt(this.value);
             startYearDisplay.textContent = startYear;
-            updateMarkers(); // 更新标记显示
+            updateMarkers(); 
         });
 
         timeSlider2.addEventListener('input', function () {
             endYear = parseInt(this.value);
             endYearDisplay.textContent = endYear;
-            updateMarkers(); // 更新标记显示
+            updateMarkers(); 
         });
 
     </script>
