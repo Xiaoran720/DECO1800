@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="DECO1800.css/base.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
     <style>
-
         * {
             margin: 0;
             padding: 0;
@@ -22,18 +21,6 @@
             border-radius: 5px;
             padding: 8px;
         }
-
-        .whalestale-title {
-            font-family: 'Georgia', serif; 
-            font-size: 40px; 
-            font-weight: bold; 
-            color: #ffffff; 
-            text-align: center; 
-            letter-spacing: 2px; 
-            text-transform: uppercase; 
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); 
-            margin-top: 50px; 
-}
         header nav li.edu_page a {
             color: black;
         }
@@ -66,7 +53,6 @@
             color: black;
             text-decoration: underline;
         }
-
         form.search-box input[type=text] {
             padding: 10px;
             font-size: 12px;
@@ -79,7 +65,6 @@
             width: 20vw;
             margin-right: -600px;
         }
-        
         form.search-box button {
             border-radius: 5px;
             float: right;
@@ -90,17 +75,14 @@
             border-left: none; 
             cursor: pointer;
         }
-
         form.search-box button:hover {
             background: #0b7dda;
         }
-
         form.search-box::after {
             content: "";
             clear: both;
             display: table;
         }
-
         header .login {
             color: #fff;
             text-decoration: none;
@@ -110,10 +92,10 @@
             padding: 20px;
         }
         .whale-types h1 {
-        font-size: 30px;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 30px;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
         }
         .whale-grid {
             display: grid;
@@ -128,30 +110,28 @@
             width: 300px;
             height: 200px;
             border-radius: 10px;
+            cursor: pointer; 
         }
         .whale p {
             font-weight: bold;
             margin-top: 10px;
         }
         .more-info h2 {
-        font-size: 30px;
-        font-weight: bold;
-        text-align: center;
-        color: black;
-        margin: 50px 30px 0;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            color: black;
+            margin: 50px 30px 0;
         }
-
         .info-grid {
             display: grid;
             grid-template-columns: auto auto auto;
             gap: 20px;
         }
-
         .info-card {
             color: white;
             padding: 20px;
         }
-
         .info-card h3 {
             background-color: #4682B4;
             padding: 10px;
@@ -160,12 +140,10 @@
             margin-bottom: 15px;
             text-align: center;
         }
-
         .info-card ul {
             list-style: circle;
             color: black;
         }
-
         .info-card ul li {
             margin-bottom: 10px;
             font-size: 14px;
@@ -184,16 +162,39 @@
             color: black;
             text-decoration: underline;
         }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.5); 
+            justify-content: center; 
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            width: 80%;
+            max-width: 600px;
+        }
+        .close {
+            color: #aaa; 
+            float: right; 
+            font-size: 28px; 
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black; 
+            text-decoration: none; 
+            cursor: pointer;
+        }
     </style>
-</head>
-<body>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whales Knowledge Base</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -202,7 +203,11 @@
                 <li class="edu_page"><a href="edu_page.html">Whales Knowledge Base</a></li>
                 <li class="mvp"><a href="mvp.html">Interactive Map</a></li>
             </ul>
-            <a class="whalestale-title">WhalesTale</a>
+            <form class="search-box" action="action_page.php">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit">Search<i class="fa fa-search"></i></button>
+            </form>
+            <a href="#" class="login">Login</a>
         </nav>
     </header>
 
@@ -211,36 +216,20 @@
             <h1>Types of Whales</h1>
             <div class="whale-grid">
                 <div class="whale">
-                    <a href="https://en.wikipedia.org/wiki/Humpback_whale">
-                        <img src="image/Humpack.jpg" alt="Humpback Whale" href="">
-                    </a>
+                    <img src="image/Humpback.jpg" alt="Humpback Whale" data-whale="Humpback whale">
                     <p>Humpback Whales</p>
                 </div>
                 <div class="whale">
-                    <a href="https://en.wikipedia.org/wiki/Minke_whale">
-                        <img src="image/Minke.jpg" alt="Minke Whale">
-                    </a>
+                    <img src="image/Minke.jpg" alt="Minke Whale" data-whale="Minke whale">
                     <p>Minke Whale</p>
                 </div>
                 <div class="whale">
-                    <a href="https://en.wikipedia.org/wiki/Southern_right_whale">
-                        <img src="image/Southern Right Whale.jpg" alt="Southern Right Whale">
-                    </a>
+                    <img src="image/Southern Right Whale.jpg" alt="Southern Right Whale" data-whale="Southern right whale">
                     <p>Southern Right Whale</p>
                 </div>
                 <div class="whale">
-                    <a href="https://en.wikipedia.org/wiki/Bowhead_whale">
-                        <img src="image/Bowhead Whale.jpg" alt="Bowhead Whale">
-                    </a>
+                    <img src="image/Bowhead Whale.jpg" alt="Bowhead Whale" data-whale="Bowhead whale">
                     <p>Bowhead Whales</p>
-                </div>
-                <div class="whale">
-                    <img src="image/Humpack.jpg" alt="Humpback Whale">
-                    <p>Humpback Whales</p>
-                </div>
-                <div class="whale">
-                    <img src="image/Humpack.jpg" alt="Humpback Whale">
-                    <p>Humpback Whales</p>
                 </div>
             </div>
         </section>
@@ -283,9 +272,43 @@
             <a href="#">Follow Us</a>
         </div>
     </footer>
-</body>
-</html>
 
+    <div class="modal" id="whaleModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="whaleTitle"></h2>
+            <p id="whaleDescription"></p>
+        </div>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.whale img').on('click', function() {
+                var whaleType = $(this).data('whale'); 
+
+                $.ajax({
+                    url: `https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=&explaintext=&format=json&origin=*&titles=${whaleType}`,
+                    method: 'GET',
+                    success: function(data) {
+                        var page = Object.values(data.query.pages)[0];
+                        $('#whaleTitle').text(page.title); 
+                        $('#whaleDescription').text(page.extract); 
+                        $('#whaleModal').css('display', 'flex'); 
+                    }
+                });
+            });
+
+            $('#closeModal').on('click', function() {
+                $('#whaleModal').css('display', 'none'); 
+            });
+
+            $(window).on('click', function(event) {
+                if ($(event.target).is('#whaleModal')) {
+                    $('#whaleModal').css('display', 'none'); 
+                }
+            });
+        });
+    </script>
 </body>
 </html>
