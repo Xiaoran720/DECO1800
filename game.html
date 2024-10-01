@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Whale Discovery Game with Leaflet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 引入 Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        /* 实时距离显示样式 */
+        #distance-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            font-size: 16px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="map"></div>
+        <div id="distance-display">Distance: 0 km</div> <!-- 距离显示区域 -->
+    </div>
+
+    <!-- 引入 Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // 船只起始位置
+        var boatPosition = {
+            lng: 176,
+            lat: -24
+        };
+
+        // 鲸鱼位置
+        var whalePosition = {
+            lng: 160,
+            lat: -26
+        };
+
+        // 创建地图
+        var map = L.map('map', {
+            center: [boatPosition.lat, boatPosition.lng],
+            zoom: 5,
+            zoomControl: false,
+            attributionControl: false
+        });
+
+        // 添加地图瓦片层（使用 OpenStreetMap）
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        }).addTo(map);
+
+        // 禁用地图的交互
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+
+        // 添加船只标记
+        var boatIcon = L.icon({
+            iconUrl: 'boat.png',  // 请确保这个路径是正确的，指向 boat.png 文件
+            iconSize: [40, 40],   // 设置图标大小
+            iconAnchor: [20, 20]  // 设置图标的锚点，使其中心对齐
+        });
+
+        var boatMarker = L.marker([boatPosition.lat, boatPosition.lng], {icon: boatIcon}).addTo(map);
+
+        // 使用欧几里得距离计算
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            var deltaLat = lat2 - lat1;
+            var deltaLon = lon2 - lon1;
+            return Math.sqrt(deltaLat * deltaLat + deltaLon * deltaLon);
+        }
+
+        // 更新距离显示
+        function updateDistanceDisplay(distance) {
+            var distanceInKm = (distance * 111).toFixed(2); // 将经纬度距离转换为公里，近似值
+            document.getElementById('distance-display').textContent = 'Distance: ' + distanceInKm + ' km';
+        }
+
+        // 检查是否发现鲸鱼
+        var whaleFound = false;
+        function checkWhaleDiscovery(distance) {
+            var discoveryDistance = 0.5; // 设置发现距离阈值，可根据需要调整
+            if (distance <= discoveryDistance && !whaleFound) {
+                whaleFound = true;
+                showWhalePopup();
+            }
+        }
+
+        // 显示鲸鱼弹窗
+        function showWhalePopup() {
+            var popupContent = '<h3>你发现了一只鲸鱼！</h3><img src="whale.jpg" alt="Whale" style="width:100%;">';
+            var popup = L.popup()
+                .setLatLng([whalePosition.lat, whalePosition.lng])
+                .setContent(popupContent)
+                .openOn(map);
+        }
+
+        // 更新船只位置和实时距离
+        function updateGame() {
+            // 计算欧几里得距离
+            var distance = calculateDistance(boatPosition.lat, boatPosition.lng, whalePosition.lat, whalePosition.lng);
+            updateDistanceDisplay(distance); // 更新距离显示
+
+            // 检查是否发现鲸鱼
+            checkWhaleDiscovery(distance);
+        }
+
+        // 监听键盘事件
+        document.addEventListener('keydown', function(event) {
+            var moveDistance = 0.5; // 每次移动的距离，可根据需要调整
+
+            var newLat = boatPosition.lat;
+            var newLng = boatPosition.lng;
+
+            switch (event.key) {
+                case 'ArrowUp':
+                    newLat += moveDistance;
+                    break;
+                case 'ArrowDown':
+                    newLat -= moveDistance;
+                    break;
+                case 'ArrowLeft':
+                    newLng -= moveDistance;
+                    break;
+                case 'ArrowRight':
+                    newLng += moveDistance;
+                    break;
+                default:
+                    return; // 如果不是方向键，退出
+            }
+
+            // 检查是否超出地图边界（可选）
+            if (newLat > 85 || newLat < -85 || newLng > 180 || newLng < -180) {
+                return;
+            }
+
+            // 更新船只位置
+            boatPosition.lat = newLat;
+            boatPosition.lng = newLng;
+
+            // 更新地图中心
+            map.setView([boatPosition.lat, boatPosition.lng]);
+
+            // 更新船只标记位置
+            boatMarker.setLatLng([boatPosition.lat, boatPosition.lng]);
+
+            // 更新游戏状态
+            updateGame();
+        });
+
+        // 初始化游戏
+        updateGame();
+    </script>
+</body>
+</html>
