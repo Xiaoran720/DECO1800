@@ -6,6 +6,8 @@
     <title>Map of Whale Strandings and Sightings</title>
     <link rel="stylesheet" href="DECO1800.css/base.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         * {
             margin: 0;
@@ -14,6 +16,22 @@
         }
         body {
             font-family: Arial, sans-serif;
+        }
+        header{
+            background-image: linear-gradient(rgba(107, 171, 245, 0.8), rgba(81, 129, 185, 0.8), rgba(62, 100, 143, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding:  10px;
+        }
+        #web_name{
+            color: white;
+            font-family: Merienda;
+            font-size: 40px;
+            font-weight: 700;
+            text-align: left;
+            line-height: normal;
+            flex: 1;
         }
         header nav li.edu_page {
             color: black;
@@ -25,6 +43,9 @@
             color: black;
         }
         header nav {
+            flex: 2;
+            display: flex;
+            justify-content: center;
             text-align: center;
             margin: 0;
             padding: 10px;
@@ -32,10 +53,8 @@
         header nav ul {
             list-style: none; 
             padding: 0;
-            margin: 0;
+            margin: 0 -20px;
             display: flex; 
-            justify-content: center; 
-            gap: 20px; 
         }
         header nav li {
             display: block;
@@ -53,59 +72,55 @@
             color: black;
             text-decoration: underline;
         }
-        form.search-box input[type=text] {
-            padding: 10px;
-            font-size: 12px;
-            width: 80%;
-            background: #f1f1f1;
-        }
-        .search-box {
-            display: flex; 
-            justify-content: center; 
-            width: 20vw;
-            margin-right: -600px;
-        }
-        form.search-box button {
-            border-radius: 5px;
-            float: right;
-            text-align: center;
-            width: 20%;
-            font-size: 12px;
-            border: 1px solid grey;
-            border-left: none; 
-            cursor: pointer;
-        }
-        form.search-box button:hover {
-            background: #0b7dda;
-        }
-        form.search-box::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
+        
         header .login {
             color: #fff;
             text-decoration: none;
             margin-right: 10px;
+            flex: 1;
+            text-align: right;
         }
+
         main {
             padding: 20px;
         }
+
+        .whale-types {
+            width: 100%;
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+
         .whale-types h1 {
             font-size: 30px;
             font-weight: bold;
-            text-align: center;
-            margin-bottom: 30px;
+            text-align: left;
+            margin: 30px auto;
         }
+
+        .intro {
+            width: 100%;
+            margin: 50px auto; 
+            font-size: 20px;
+            border-radius: 20px;
+            background: linear-gradient(0deg, rgba(81, 129, 185, 0.60) 0%, rgba(107, 171, 245, 0.60) 100%);
+            padding: 20px;
+        }
+
         .whale-grid {
+            width: 100%;
+            margin: 20px auto; 
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 50px 150px;
             justify-items: center;
         }
+
         .whale {
             text-align: center;
+            position: relative
         }
+
         .whale img {
             width: 300px;
             height: 200px;
@@ -113,41 +128,65 @@
             cursor: pointer; 
         }
         .whale p {
-            font-weight: bold;
+            font-weight:400;
             margin-top: 10px;
-        }
-        .more-info h2 {
-            font-size: 30px;
-            font-weight: bold;
-            text-align: center;
-            color: black;
-            margin: 50px 30px 0;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: auto auto auto;
-            gap: 20px;
-        }
-        .info-card {
-            color: white;
-            padding: 20px;
-        }
-        .info-card h3 {
-            background-color: #4682B4;
-            padding: 10px;
-            overflow: hidden;
+            font-family: Moul;
             font-size: 20px;
-            margin-bottom: 15px;
+        }
+
+        .whale-sound-icon {
+            font-size: 24px;
+            color: #000;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .whale-sound-icon:hover {
+            color: #4682B4; 
+        }
+
+        #row1 {
             text-align: center;
+            margin: 10px auto;
         }
-        .info-card ul {
-            list-style: circle;
-            color: black;
+
+        #row2{
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .info-card ul li {
-            margin-bottom: 10px;
-            font-size: 14px;
-            margin-left: 15px;
+
+        #row3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tooltip-container {
+            position: relative;
+            display: inline-block; 
+        }
+
+        .tooltip {
+            display: none; 
+            position: absolute;
+            bottom: 100%; 
+            left: 50%;
+            transform: translateX(-50%); 
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            z-index: 10;
+            white-space: nowrap; 
+        }
+
+        .tooltip-container:hover .tooltip {
+            display: block; 
+        }
+
+        footer{
+            background-image: linear-gradient(rgba(107, 171, 245, 0.8), rgba(81, 129, 185, 0.8), rgba(62, 100, 143, 0.8));
         }
         .footer-links {
             text-align: center;
@@ -198,70 +237,98 @@
 </head>
 <body>
     <header>
+        <p id="web_name">WhalesTale</p>
         <nav>
             <ul>
                 <li class="edu_page"><a href="edu_page.html">Whales Knowledge Base</a></li>
                 <li class="mvp"><a href="mvp.html">Interactive Map</a></li>
+                <li class="game"><a href="game.html">Game To Know</a></li>
             </ul>
-            <form class="search-box" action="action_page.php">
-                <input type="text" placeholder="Search.." name="search">
-                <button type="submit">Search<i class="fa fa-search"></i></button>
-            </form>
             <a href="#" class="login">Login</a>
         </nav>
     </header>
 
     <main>
         <section class="whale-types">
-            <h1>Types of Whales</h1>
+            <h1>Common Types of Whales</h1>
+            <div class="intro">
+                While there are 45 species of whale and dolphin that use Australian waters not many of these species are often seen by whale and dolphin watchers. Below is a description of more commonly encountered species, and some rarer ones that are occasionally seen because they use shallow waters close to the coast.
+            </div>
             <div class="whale-grid">
                 <div class="whale">
-                    <img src="image/Humpback.jpg" alt="Humpback Whale" data-whale="Humpback whale">
+                    <img src="./image/Humpback whale (Megaptera novaeangliae).jpg" alt="Humpback Whale" data-whale="Humpback whale">
                     <p>Humpback Whales</p>
+                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
+                    <audio class="whale-sound" src="#"></audio>
                 </div>
                 <div class="whale">
-                    <img src="image/Minke.jpg" alt="Minke Whale" data-whale="Minke whale">
+                    <img src="./image/dwarf minke whale.jpg" alt="Minke Whale" data-whale="Minke whale">
                     <p>Minke Whale</p>
+                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
+                    <audio class="whale-sound" src="#"></audio>
                 </div>
                 <div class="whale">
-                    <img src="image/Southern Right Whale.jpg" alt="Southern Right Whale" data-whale="Southern right whale">
+                    <img src="./image/Southern right whale (Eubalaena australis).jpg" alt="Southern Right Whale" data-whale="Southern right whale">
                     <p>Southern Right Whale</p>
+                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
+                    <audio class="whale-sound" src="#"></audio>
                 </div>
                 <div class="whale">
-                    <img src="image/Bowhead Whale.jpg" alt="Bowhead Whale" data-whale="Bowhead whale">
-                    <p>Bowhead Whales</p>
+                    <img src="./image/Killer whale (Orcinus orca).jpg" alt="Orca" data-whale="Orca">
+                    <p>Killer Whales</p>
+                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
+                    <audio class="whale-sound" src="#"></audio>
                 </div>
+                <div class="whale">
+                    <img src="./image/Blue whale (Balaenoptera musculus).jpg" alt="Blue Whale" data-whale="Blue whale">
+                    <p>Blue Whales</p>
+                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
+                    <audio class="whale-sound" src="#"></audio>
+                </div>
+            </div>
+            <h1>Helpful Website</h1>
+            <div class="intro">
+                There are many websites that can help you learn more about marine wildlife such as whales. We have listed some of them to help you get more information if you want to learn more. Most of the websites are not limited to introducing marine life, but give a global perspective on biological sustainability and biological conservation. They aim to help the general public gain knowledge while promoting and advancing biological and ecological conservation.            
             </div>
         </section>
 
-        <section class="more-info">
-            <h2>More Information</h2>
-            <div class="info-grid">
-                <div class="info-card">
-                    <h3>Academic</h3>
-                    <ul>
-                        <li>Whales Learn Songs From Each Other In A Cultural 'deep Dive'</li>
-                        <li>Thar She Blows! An Expert's guide to whale watching 101</li>
-                        <li>Whale Migrations: How new UN treaty aims to protect species on the high seas</li>
-                    </ul>
-                </div>
-                <div class="info-card">
-                    <h3>Interesting</h3>
-                    <ul>
-                        <li>Thar She Blows! An Expert's guide to whale watching 101</li>
-                        <li>Whale Migrations: How new UN treaty aims to protect species on the high seas</li>
-                        <li>Whales Learn Songs From Each Other In A Cultural 'deep Dive'</li>
-                    </ul>
-                </div>
-                <div class="info-card">
-                    <h3>Event</h3>
-                    <ul>
-                        <li>Whale Migrations: How new UN treaty aims to protect species on the high seas</li>
-                        <li>Whales Learn Songs From Each Other In A Cultural 'deep Dive'</li>
-                        <li>Thar She Blows! An Expert's guide to whale watching 101</li>
-                    </ul>
-                </div>
+        <section class="websites">
+          <div id="row1">
+            <div class="tooltip-container">
+                <a href="#" target="_blank">
+                    <img src="./image/DCCEEW.png" alt="Department of Climiate Change, Energy, the Environment and Water" style="width: 30%; height: auto;">
+                    <div class="tooltip">Department of Climate Change, Energy, the Environment and Water</div>
+                </a>
             </div>
+          </div>
+          <div id="row2">
+            <div class="tooltip-container">
+                <a href="#" target="_blank">
+                    <img src="./image/international whaling commission 1.jpg" alt="International Whaling Commission" style="width: 100%; height: auto;">
+                    <div class="tooltip">International Whaling Commission</div>
+                </a>
+            </div>
+            <div class="tooltip-container">
+                <a href="#" target="_blank">
+                    <img src="./image/australian_wildlife_journeys-logo.png" alt="Australian Wildlife Journey" style="width: 60%; height: auto;">
+                    <div class="tooltip">1234</div>
+                </a>
+            </div>
+          </div>
+          <div id="row3">
+            <div class="tooltip-container">
+                <a href="#" target="_blank">
+                    <img src="./image/WWF.jpg" alt="WWF" style="width: 18%; height: auto;">
+                    <div class="tooltip">1234</div>
+                </a>
+            </div>
+            <div class="tooltip-container">
+                <a href="#" target="_blank">
+                    <img src="./image/travel for wildlife.png" alt="Travel For Wildlife" style="width: 90%; height: auto;">
+                    <div class="tooltip">1234</div>
+                </a>
+            </div>
+          </div>
         </section>
     </main>
 
@@ -306,6 +373,21 @@
             $(window).on('click', function(event) {
                 if ($(event.target).is('#whaleModal')) {
                     $('#whaleModal').css('display', 'none'); 
+                }
+            });
+        });
+
+        document.querySelectorAll('.whale-sound-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const sound = this.dataset.sound; 
+                const audioElement = this.nextElementSibling; 
+                if (audioElement) {
+                    if (!audioElement.paused) {
+                        audioElement.pause();
+                        audioElement.currentTime = 0;
+                    } else {
+                        audioElement.play();
+                    }
                 }
             });
         });
