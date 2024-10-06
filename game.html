@@ -1,176 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Whale Discovery Game with Leaflet</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- 引入 Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-        #game-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        /* 实时距离显示样式 */
-        #distance-display {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 5px 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 1px solid #ccc;
-            font-size: 16px;
-            z-index: 1000;
-        }
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      #game-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+      /* 实时距离显示样式 */
+      #distance-display {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ccc;
+        font-size: 16px;
+        z-index: 1000;
+      }
+      /* 知识库弹窗样式 */
+      #knowledge-popup,
+      #quiz-popup {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        padding: 20px;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1001;
+      }
+      #knowledge-popup h2,
+      #quiz-popup h2 {
+        margin-top: 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="game-container">
-        <div id="map"></div>
-        <div id="distance-display">Distance: 0 km</div> <!-- 距离显示区域 -->
+      <div id="map"></div>
+      <div id="distance-display">Distance: 0 km</div>
+
+      <!-- 知识库弹窗 -->
+      <div id="knowledge-popup">
+        <h2 id="knowledge-title">Knowledge Base</h2>
+        <p id="knowledge-content">Here will display knowledge related to the selected region.</p>
+        <button onclick="startQuiz()">Start Quiz</button>
+      </div>
+
+      <!-- 测验弹窗 -->
+      <div id="quiz-popup">
+        <h2>Quiz</h2>
+        <div id="quiz-questions"></div>
+        <button onclick="submitQuiz()">Submit Quiz</button>
+      </div>
     </div>
 
     <!-- 引入 Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        // 船只起始位置
-        var boatPosition = {
-            lng: 176,
-            lat: -24
-        };
+      // 船只初始位置
+      var boatPosition = { lng: 176, lat: -24 };
+      var whalePosition = { lng: 160, lat: -26 };
 
-        // 鲸鱼位置
-        var whalePosition = {
-            lng: 160,
-            lat: -26
-        };
+      // 创建地图
+      var map = L.map("map", {
+        center: [boatPosition.lat, boatPosition.lng],
+        zoom: 5,
+        zoomControl: true, // 启用地图缩放
+        attributionControl: true
+      });
 
-        // 创建地图
-        var map = L.map('map', {
-            center: [boatPosition.lat, boatPosition.lng],
-            zoom: 5,
-            zoomControl: false,
-            attributionControl: false
+      // 添加地图瓦片层
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // 添加船只标记
+      var boatIcon = L.icon({
+        iconUrl: "boat.png", // 请确保文件路径正确
+        iconSize: [40, 40],
+        iconAnchor: [20, 20]
+      });
+      var boatMarker = L.marker([boatPosition.lat, boatPosition.lng], { icon: boatIcon }).addTo(map);
+
+      // 禁用部分交互以模拟游戏场景
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+
+      // 区域知识库和测验库
+      const regions = [
+        {
+          id: 1,
+          name: "Region 1 West",
+          bounds: [
+            [-44.995, 140.63],
+            [-37.677, 150.282],
+          ], // Region 1 West Coordinates
+          knowledge:
+            "This region is a key migration corridor for humpback whales along Australia's west coast. Whales travel through this region on their way to feeding grounds.",
+          quiz: [
+            {
+              question: "Why do humpback whales pass through Region 1 West?",
+              options: [
+                "To feed on krill",
+                "To give birth to calves",
+                "To rest during migration",
+                "To travel to feeding grounds",
+              ],
+              answer: "To travel to feeding grounds",
+            },
+          ],
+        },
+        {
+          id: 2,
+          name: "Region 1 East",
+          bounds: [
+            [-44.992, 150.292],
+            [-38.765, 159.943],
+          ], // Region 1 East Coordinates
+          knowledge:
+            "In this region, whales are often seen resting along the eastern coastline of Australia during their migration.",
+          quiz: [
+            {
+              question:
+                "What activity do humpback whales primarily engage in while in Region 1 East?",
+              options: [
+                "Feeding",
+                "Resting during migration",
+                "Mating",
+                "Avoiding predators",
+              ],
+              answer: "Resting during migration",
+            },
+          ],
+        },
+        {
+          id: 3,
+          name: "Region 2 West",
+          bounds: [
+            [-37.664, 149.672],
+            [-35.55, 150.28],
+          ], // Region 2 West Coordinates
+          knowledge:
+            "This region serves as a critical stopover for whales where they prepare for the next leg of their migration towards the southern oceans.",
+          quiz: [
+            {
+              question:
+                "What makes Region 2 West important for humpback whales?",
+              options: [
+                "It provides warm waters for mating",
+                "It is a feeding area",
+                "It serves as a resting point during migration",
+                "It is a breeding ground",
+              ],
+              answer: "It serves as a resting point during migration",
+            },
+          ],
+        },
+        {
+          id: 4,
+          name: "Region 2 East",
+          bounds: [
+            [-37.665, 150.287],
+            [-30.35, 153.312],
+          ], // Region 2 East Coordinates
+          knowledge:
+            "In this region, whales feed on small fish and krill before continuing their journey towards breeding grounds.",
+          quiz: [
+            {
+              question:
+                "What is the primary activity of humpback whales in Region 2 East?",
+              options: [
+                "Mating",
+                "Feeding",
+                "Resting",
+                "Traveling towards breeding grounds",
+              ],
+              answer: "Feeding",
+            },
+          ],
+        },
+        {
+          id: 5,
+          name: "Region 3 East",
+          bounds: [
+            [-30.343, 151.378],
+            [-23.044, 154.068],
+          ], // Region 3 East Coordinates
+          knowledge:
+            "This region is a breeding ground for humpback whales. Whales give birth to calves in the warm waters here.",
+          quiz: [
+            {
+              question: "Why do humpback whales visit Region 3 East?",
+              options: [
+                "To feed",
+                "To give birth to calves",
+                "To avoid predators",
+                "To rest",
+              ],
+              answer: "To give birth to calves",
+            },
+          ],
+        },
+        {
+          id: 6,
+          name: "Region 3 West",
+          bounds: [
+            [-30.35, 149.672],
+            [-23.044, 150.287],
+          ], // Region 3 West Coordinates
+          knowledge:
+            "In this region, humpback whales are frequently seen traveling with calves as they move to warmer waters for breeding.",
+          quiz: [
+            {
+              question:
+                "What behavior is commonly observed in humpback whales in Region 3 West?",
+              options: [
+                "Mating and reproducing",
+                "Traveling with calves",
+                "Resting during migration",
+                "Feeding on krill",
+              ],
+              answer: "Traveling with calves",
+            },
+          ],
+        },
+        {
+          id: 7,
+          name: "Region 4 West",
+          bounds: [
+            [-23.044, 149.672],
+            [-20.0, 150.28],
+          ], // Region 4 West Coordinates
+          knowledge:
+            "This is a crucial feeding area for humpback whales as they migrate along the northern regions of Australia's coast.",
+          quiz: [
+            {
+              question:
+                "What is the primary activity of humpback whales in Region 4 West?",
+              options: ["Feeding", "Mating", "Resting", "Traveling"],
+              answer: "Feeding",
+            },
+          ],
+        },
+        {
+          id: 8,
+          name: "Region 4 East",
+          bounds: [
+            [-23.044, 151.378],
+            [-20.0, 154.068],
+          ], // Region 4 East Coordinates
+          knowledge:
+            "In this region, whales can often be seen socializing and communicating through songs as they prepare for their migration south.",
+          quiz: [
+            {
+              question:
+                "What unique behavior is often observed in Region 4 East?",
+              options: [
+                "Socializing and communicating through songs",
+                "Resting",
+                "Mating",
+                "Feeding",
+              ],
+              answer: "Socializing and communicating through songs",
+            },
+          ],
+        },
+      ];
+
+      // 检测船只是否进入区域
+      function checkBoatInRegion(lat, lon) {
+        for (let region of regions) {
+          let latMin = Math.min(region.bounds[0][0], region.bounds[1][0]);
+          let latMax = Math.max(region.bounds[0][0], region.bounds[1][0]);
+          let lonMin = Math.min(region.bounds[0][1], region.bounds[1][1]);
+          let lonMax = Math.max(region.bounds[0][1], region.bounds[1][1]);
+
+          if (lat >= latMin && lat <= latMax && lon >= lonMin && lon <= lonMax) {
+            return region;
+          }
+        }
+        return null;
+      }
+
+      // 关闭知识库和测验弹窗
+      function hidePopups() {
+        document.getElementById("knowledge-popup").style.display = "none";
+        document.getElementById("quiz-popup").style.display = "none";
+      }
+
+      // 显示知识库内容
+      function showKnowledgeBase(region) {
+        document.getElementById("knowledge-title").innerText = region.name;
+        document.getElementById("knowledge-content").innerText = region.knowledge;
+        document.getElementById("knowledge-popup").style.display = "block";
+      }
+
+      // 开始测验
+      let currentQuiz = [];
+      function startQuiz() {
+        document.getElementById("knowledge-popup").style.display = "none";
+        document.getElementById("quiz-popup").style.display = "block";
+        let quizHtml = "";
+        currentQuiz.forEach((q, index) => {
+          quizHtml += `<p>${index + 1}. ${q.question}</p>`;
+          quizHtml += q.options.map(
+            option => `<label><input type="radio" name="q${index}" value="${option}"> ${option}</label><br>`
+          ).join("");
         });
+        document.getElementById("quiz-questions").innerHTML = quizHtml;
+      }
 
-        // 添加地图瓦片层（使用 OpenStreetMap）
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        }).addTo(map);
-
-        // 禁用地图的交互
-        map.dragging.disable();
-        map.touchZoom.disable();
-        map.doubleClickZoom.disable();
-        map.scrollWheelZoom.disable();
-        map.boxZoom.disable();
-        map.keyboard.disable();
-
-        // 添加船只标记
-        var boatIcon = L.icon({
-            iconUrl: 'boat.png',  // 请确保这个路径是正确的，指向 boat.png 文件
-            iconSize: [40, 40],   // 设置图标大小
-            iconAnchor: [20, 20]  // 设置图标的锚点，使其中心对齐
+      // 提交测验
+      function submitQuiz() {
+        let correctCount = 0;
+        currentQuiz.forEach((q, index) => {
+          const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+          if (selectedOption && selectedOption.value === q.answer) {
+            correctCount++;
+          }
         });
+        alert(`You got ${correctCount} / ${currentQuiz.length} correct.`);
+        document.getElementById("quiz-popup").style.display = "none";
+      }
 
-        var boatMarker = L.marker([boatPosition.lat, boatPosition.lng], {icon: boatIcon}).addTo(map);
+      // 使用欧几里得距离计算
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+        var deltaLat = lat2 - lat1;
+        var deltaLon = lon2 - lon1;
+        return Math.sqrt(deltaLat * deltaLat + deltaLon * deltaLon);
+      }
 
-        // 使用欧几里得距离计算
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            var deltaLat = lat2 - lat1;
-            var deltaLon = lon2 - lon1;
-            return Math.sqrt(deltaLat * deltaLat + deltaLon * deltaLon);
+      // 更新距离显示
+      function updateDistanceDisplay(distance) {
+        var distanceInKm = (distance * 111).toFixed(2); // 转换为公里
+        document.getElementById('distance-display').textContent = 'Distance: ' + distanceInKm + ' km';
+      }
+
+      // 检查是否发现鲸鱼
+      var whaleFound = false;
+      function checkWhaleDiscovery(distance) {
+        var discoveryDistance = 0.5; // 设置发现距离阈值
+        if (distance <= discoveryDistance && !whaleFound) {
+          whaleFound = true;
+          showWhalePopup();
+        }
+      }
+
+      // 显示鲸鱼弹窗
+      function showWhalePopup() {
+        var popupContent = '<h3>You discovered a whale!</h3><img src="whale.jpg" alt="Whale" style="width:100%;">';
+        var popup = L.popup().setLatLng([whalePosition.lat, whalePosition.lng]).setContent(popupContent).openOn(map);
+      }
+
+      // 更新船只位置和实时距离
+      function updateGame() {
+        var distance = calculateDistance(boatPosition.lat, boatPosition.lng, whalePosition.lat, whalePosition.lng);
+        updateDistanceDisplay(distance);
+        checkWhaleDiscovery(distance);
+      }
+
+      // 键盘控制船只移动
+      document.addEventListener('keydown', function(event) {
+        var moveDistance = 0.5;
+        var newLat = boatPosition.lat;
+        var newLng = boatPosition.lng;
+
+        switch (event.key) {
+          case 'ArrowUp':
+            newLat += moveDistance;
+            break;
+          case 'ArrowDown':
+            newLat -= moveDistance;
+            break;
+          case 'ArrowLeft':
+            newLng -= moveDistance;
+            break;
+          case 'ArrowRight':
+            newLng += moveDistance;
+            break;
+          default:
+            return;
         }
 
-        // 更新距离显示
-        function updateDistanceDisplay(distance) {
-            var distanceInKm = (distance * 111).toFixed(2); // 将经纬度距离转换为公里，近似值
-            document.getElementById('distance-display').textContent = 'Distance: ' + distanceInKm + ' km';
+        // 更新船只位置
+        boatPosition.lat = newLat;
+        boatPosition.lng = newLng;
+
+        // 更新地图中心和标记位置
+        map.setView([boatPosition.lat, boatPosition.lng]);
+        boatMarker.setLatLng([boatPosition.lat, boatPosition.lng]);
+
+        // 检查是否进入区域或发现鲸鱼
+        var region = checkBoatInRegion(boatPosition.lat, boatPosition.lng);
+        if (region) {
+          currentQuiz = region.quiz;
+          showKnowledgeBase(region);
+        } else {
+          hidePopups();
         }
 
-        // 检查是否发现鲸鱼
-        var whaleFound = false;
-        function checkWhaleDiscovery(distance) {
-            var discoveryDistance = 0.5; // 设置发现距离阈值，可根据需要调整
-            if (distance <= discoveryDistance && !whaleFound) {
-                whaleFound = true;
-                showWhalePopup();
-            }
-        }
+        updateGame(); // 更新游戏状态
+      });
 
-        // 显示鲸鱼弹窗
-        function showWhalePopup() {
-            var popupContent = '<h3>你发现了一只鲸鱼！</h3><img src="whale.jpg" alt="Whale" style="width:100%;">';
-            var popup = L.popup()
-                .setLatLng([whalePosition.lat, whalePosition.lng])
-                .setContent(popupContent)
-                .openOn(map);
-        }
-
-        // 更新船只位置和实时距离
-        function updateGame() {
-            // 计算欧几里得距离
-            var distance = calculateDistance(boatPosition.lat, boatPosition.lng, whalePosition.lat, whalePosition.lng);
-            updateDistanceDisplay(distance); // 更新距离显示
-
-            // 检查是否发现鲸鱼
-            checkWhaleDiscovery(distance);
-        }
-
-        // 监听键盘事件
-        document.addEventListener('keydown', function(event) {
-            var moveDistance = 0.5; // 每次移动的距离，可根据需要调整
-
-            var newLat = boatPosition.lat;
-            var newLng = boatPosition.lng;
-
-            switch (event.key) {
-                case 'ArrowUp':
-                    newLat += moveDistance;
-                    break;
-                case 'ArrowDown':
-                    newLat -= moveDistance;
-                    break;
-                case 'ArrowLeft':
-                    newLng -= moveDistance;
-                    break;
-                case 'ArrowRight':
-                    newLng += moveDistance;
-                    break;
-                default:
-                    return; // 如果不是方向键，退出
-            }
-
-            // 检查是否超出地图边界（可选）
-            if (newLat > 85 || newLat < -85 || newLng > 180 || newLng < -180) {
-                return;
-            }
-
-            // 更新船只位置
-            boatPosition.lat = newLat;
-            boatPosition.lng = newLng;
-
-            // 更新地图中心
-            map.setView([boatPosition.lat, boatPosition.lng]);
-
-            // 更新船只标记位置
-            boatMarker.setLatLng([boatPosition.lat, boatPosition.lng]);
-
-            // 更新游戏状态
-            updateGame();
-        });
-
-        // 初始化游戏
-        updateGame();
+      // 初始化游戏
+      updateGame();
     </script>
-</body>
+  </body>
 </html>
