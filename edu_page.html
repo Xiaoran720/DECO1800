@@ -154,12 +154,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 80px 0;
+        }
+        #row2 img {
+            margin: 0 120px;
         }
 
         #row3 {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-right: -100px;
+        }
+        #row3 img {
+            margin: 0 80px;
         }
 
         .tooltip-container {
@@ -170,15 +178,40 @@
         .tooltip {
             display: none; 
             position: absolute;
-            bottom: 100%; 
-            left: 50%;
             transform: translateX(-50%); 
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 8px;
+            padding: 15px;
             border-radius: 5px;
             z-index: 10;
-            white-space: nowrap; 
+            word-wrap: break-word; 
+            white-space: normal;
+        }
+        #row1 .tooltip {
+            top: 100%;
+            left: 50%;  
+            transform: translateX(-50%);
+            width: 400px;
+        }
+        #IWC_img {
+            top: 50%;
+            left: 100%;
+            margin-left: -115px; 
+            transform: translateY(-50%);
+            width: 400px;
+        }
+        #AWJ_img {
+            top: 50%;
+            right: 100%;
+            margin-right: -115px; 
+            transform: translateY(-50%);
+            width: 400px;
+        }
+        #row3 .tooltip {
+            bottom: 100%;
+            left: 50%;  
+            transform: translateX(-50%);
+            width: 400px;
         }
 
         .tooltip-container:hover .tooltip {
@@ -296,36 +329,36 @@
           <div id="row1">
             <div class="tooltip-container">
                 <a href="#" target="_blank">
-                    <img src="./image/DCCEEW.png" alt="Department of Climiate Change, Energy, the Environment and Water" style="width: 30%; height: auto;">
-                    <div class="tooltip">Department of Climate Change, Energy, the Environment and Water</div>
+                    <img src="./image/DCCEEW.png" style="width: 400px; height: auto;" alt="Department of Climiate Change, Energy, the Environment and Water">
+                    <div class="tooltip">The Department of Climate Change, Energy, the Environment and Water (DCCEEW) website on cetaceans provides comprehensive information on marine mammals, which related to the identification, protection, and conservation of these species. The website serves as an educational platform for the public, researchers, and policymakers, promoting awareness and support for the conservation of these vital marine species.</div>
                 </a>
             </div>
           </div>
           <div id="row2">
             <div class="tooltip-container">
                 <a href="#" target="_blank">
-                    <img src="./image/international whaling commission 1.jpg" alt="International Whaling Commission" style="width: 100%; height: auto;">
-                    <div class="tooltip">International Whaling Commission</div>
+                    <img src="./image/international whaling commission 1.jpg" alt="International Whaling Commission" style="width: 400px; height: auto;">
+                    <div id="IWC_img" class="tooltip">The International Whaling Commission (IWC) website serves as a resource for information on the conservation of whales and the management of whaling activities worldwide. The website provides access to reports, guidelines, and data regarding whale species, conservation efforts, and guidelines for sustainable practices. </div>
                 </a>
             </div>
             <div class="tooltip-container">
                 <a href="#" target="_blank">
-                    <img src="./image/australian_wildlife_journeys-logo.png" alt="Australian Wildlife Journey" style="width: 60%; height: auto;">
-                    <div class="tooltip">1234</div>
+                    <img src="./image/australian_wildlife_journeys-logo.png" alt="Australian Wildlife Journey" style="width: 400px; height: auto;">
+                    <div id="AWJ_img" class="tooltip">Australian Wildlife Journeys is a website dedicated to promoting unique wildlife experiences across Australia. It features a collehttps://australianwildlifejourneys.com/ction of specially curated tours that highlight the diverse range of native animals, natural landscapes, and conservation efforts throughout the country. the website aims to educate visitors on Australian wildlife and encourage appreciation for the country's rich biodiversity while supporting conservation initiatives.</div>
                 </a>
             </div>
           </div>
           <div id="row3">
             <div class="tooltip-container">
                 <a href="#" target="_blank">
-                    <img src="./image/WWF.jpg" alt="WWF" style="width: 18%; height: auto;">
-                    <div class="tooltip">1234</div>
+                    <img src="./image/WWF.jpg" alt="WWF" style="width: 150px; height: auto;">
+                    <div class="tooltip">The WWF Whales website is an initiative of the World Wildlife Fund (WWF) dedicated to the conservation and protection of whale populations around the globe. The site provides information on various whale species, their habitats, and the challenges they face due to threats such as climate change, pollution, and commercial whaling. Users can also find ways to get involved, support conservation initiatives, and learn about sustainable practices that benefit both whales and their habitats.</div>
                 </a>
             </div>
             <div class="tooltip-container">
                 <a href="#" target="_blank">
-                    <img src="./image/travel for wildlife.png" alt="Travel For Wildlife" style="width: 90%; height: auto;">
-                    <div class="tooltip">1234</div>
+                    <img src="./image/travel for wildlife.png" alt="Travel For Wildlife" style="width: 350px; height: auto;">
+                    <div class="tooltip">travel4Wildlife is a website dedicated to wildlife lovers and adventure seekers, providing a platform for exploring various wildlife experiences around the globe. Through engaging content and resources, Travel4Wildlife encourages a deeper appreciation for wildlife and the ecosystems that support them.</div>
                 </a>
             </div>
           </div>
