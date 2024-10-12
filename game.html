@@ -6,12 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- 引入 Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="DECO1800.css/base.css">
+    <link href="https://fonts.googleapis.com/css2?family=Merienda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Moul&display=swap" rel="stylesheet">
+
     <style>
       body, html {
         margin: 0;
         padding: 0;
         height: 100%;
       }
+
+      header{
+            background-image: linear-gradient(rgba(107, 171, 245, 0.8), rgba(81, 129, 185, 0.8), rgba(62, 100, 143, 0.8));
+            display: flex;
+            align-items: center;
+            padding:  0;
+            height: 90px;
+      }
+      #web_name{
+          color: white;
+          font-family: 'Merienda', cursive; 
+          font-size: 40px;
+          font-weight: 700;
+          text-align: left;
+          margin-left: 20px;
+          line-height: normal;
+          flex: 1;
+      }
+      header nav li.game {
+          color: black;
+          background-color: #f1f1f1;
+          padding: 50px 0px;
+          margin: 0;
+      }
+      header nav li.game a {
+          color: black;
+      }
+      header nav {
+          display: flex;
+          justify-content: center;
+          text-align: center;
+          margin-left: 90px;
+      }
+      header nav ul {
+          display: flex; 
+      }
+      header nav li {
+          display: flex;
+          font-size: 20px;
+          align-items: center;
+      }
+      header nav li a {
+          padding: 0 10px;
+      }
+      header nav li a:hover {
+          color: black;
+          text-decoration: underline;
+      }
+      
+      header .login {
+          color: #fff;
+          text-decoration: none;
+          margin-right: 20px;
+          flex: 1;
+          text-align: right;
+      }
+
       #game-container {
         position: relative;
         width: 100%;
@@ -50,9 +111,41 @@
       #quiz-popup h2 {
         margin-top: 0;
       }
+
+      footer{
+            background-image: linear-gradient(rgba(107, 171, 245, 0.8), rgba(81, 129, 185, 0.8), rgba(62, 100, 143, 0.8));
+            display: flex;
+            align-items: center;
+            padding:  10px;
+            margin: 0;
+      }
+      .footer-links {
+          justify-content: center;
+      }
+      .footer-links a {
+          margin-right: 20px;
+      }
+      .footer-links a:last-child {
+          margin-right: 0;
+      }
+      footer div a:hover {
+          color: black;
+          text-decoration: underline;
+      }
     </style>
   </head>
   <body>
+    <header>
+      <p id="web_name">WhalesTale</p>
+      <nav>
+          <ul>
+              <li class="edu_page"><a href="edu_page.html">Whales Knowledge Base</a></li>
+              <li class="mvp"><a href="mvp-interact map.html">Interactive Map</a></li>
+              <li class="game"><a href="game.html">Game To Know</a></li>
+          </ul>
+      </nav>
+      <a href="#" class="login">Login</a>
+    </header>
     <div id="game-container">
       <div id="map"></div>
       <div id="distance-display">Distance: 0 km</div>
@@ -70,7 +163,15 @@
         <div id="quiz-questions"></div>
         <button onclick="submitQuiz()">Submit Quiz</button>
       </div>
-    </div>
+    <footer>
+      <p id="web_name">WhalesTale</p>
+      <div class="footer-links">
+          <a href="#">Support</a>
+          <a href="#">Contact Us</a>
+          <a href="#">Follow Us</a>
+      </div>
+    </footer>
+  </div>
 
     <!-- 引入 Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

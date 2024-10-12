@@ -27,6 +27,8 @@ $filteredData = array_filter($data, function ($item) use ($startYear, $endYear, 
     <title>Map of Whale Strandings and Sightings</title>
     <link rel="stylesheet" href="DECO1800.css/base.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merienda&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Moul&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
