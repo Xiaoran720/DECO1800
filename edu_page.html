@@ -128,10 +128,34 @@
             color: #000;
             cursor: pointer;
             margin-top: 5px;
+            position: relative;
         }
 
         .whale-sound-icon:hover {
             color: #4682B4; 
+        }
+
+        .whale-sound-icon.playing {
+            color: #4682B4; 
+        }
+
+        .whale-sound-icon .tooltiptext {
+            visibility: hidden;
+            margin-left: 5px;
+            width: 200px;
+            font-size: 15px;
+            font-family: sans-serif;
+            background-color: darkgray;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            }
+
+        .whale-sound-icon:hover .tooltiptext {
+            visibility: visible;
         }
 
         #row1 {
@@ -284,32 +308,42 @@
                 <div class="whale">
                     <img src="./image/Humpback whale (Megaptera novaeangliae).jpg" alt="Humpback Whale" data-whale="Humpback whale">
                     <p>Humpback Whales</p>
-                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
-                    <audio class="whale-sound" src="#"></audio>
+                    <i class="fa fa-volume-up whale-sound-icon">
+                        <span class="tooltiptext">Click to play whale sound</span>
+                    </i> 
+                    <audio class="whale-sound" src="whale_sound/Humpback_whale.mp3"></audio>
                 </div>
                 <div class="whale">
                     <img src="./image/dwarf minke whale.jpg" alt="Minke Whale" data-whale="Minke whale">
                     <p>Minke whales</p>
-                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
-                    <audio class="whale-sound" src="#"></audio>
+                    <i class="fa fa-volume-up whale-sound-icon">
+                        <span class="tooltiptext">Click to play whale sound</span>
+                    </i> 
+                    <audio class="whale-sound" src="whale_sound/dwarf minke whale.mp3"></audio>
                 </div>
                 <div class="whale">
                     <img src="./image/Southern right whale (Eubalaena australis).jpg" alt="Southern Right Whale" data-whale="Southern right whale">
                     <p>Southern Right Whales</p>
-                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
-                    <audio class="whale-sound" src="#"></audio>
+                    <i class="fa fa-volume-up whale-sound-icon">
+                        <span class="tooltiptext">Click to play whale sound</span>
+                    </i> 
+                    <audio class="whale-sound" src="whale_sound/Southern right whale.mp3"></audio>
                 </div>
                 <div class="whale">
                     <img src="./image/Killer whale (Orcinus orca).jpg" alt="Orca" data-whale="Orca">
                     <p>Killer Whales</p>
-                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
-                    <audio class="whale-sound" src="#"></audio>
+                    <i class="fa fa-volume-up whale-sound-icon">
+                        <span class="tooltiptext">Click to play whale sound</span>
+                    </i> 
+                    <audio class="whale-sound" src="whale_sound/killer whale audio.mp3"></audio>
                 </div>
                 <div class="whale">
                     <img src="./image/Blue whale (Balaenoptera musculus).jpg" alt="Blue Whale" data-whale="Blue whale">
                     <p>Blue Whales</p>
-                    <i class="fa fa-volume-up whale-sound-icon" data-sound="./sounds/humpback.mp3"></i> 
-                    <audio class="whale-sound" src="#"></audio>
+                    <i class="fa fa-volume-up whale-sound-icon">
+                        <span class="tooltiptext">Click to play whale sound</span>
+                    </i> 
+                    <audio class="whale-sound" src="whale_sound/blue whale.MP3"></audio>
                 </div>
             </div>
             <h1>Helpful Website</h1>
