@@ -471,9 +471,13 @@
 
         updateGame(); // Update game state
       });
+       
+      addBuoyIcons(map, regions);
 
       // Initialize game
       updateGame();
+
+      
     }
 
     // Calculate bearing function
@@ -526,6 +530,16 @@
             closestDistance = distance;
             closestWhale = whale; // Update nearest whale
           }
+            // Check if the boat is in a region
+  var region = checkBoatInRegion(boatPosition.lat, boatPosition.lng);
+  if (region) {
+    // Only show knowledge base if quiz is not completed
+    if (!region.quizCompleted) {
+      showKnowledgeBase(region);
+    }
+  } else {
+    hidePopups(); // Hide popups if not in any region
+  }
         }
       });
 
@@ -629,32 +643,126 @@
       foundWhaleMarkers.push(marker); // Add marker to array for later management
     }
 
+
+     //add buoyicons
+ function addBuoyIcons(map, regions) {
+  regions.forEach(region => {
+    const latCenter = (region.bounds[0][0] + region.bounds[1][0]) / 2;
+    const lonCenter = (region.bounds[0][1] + region.bounds[1][1]) / 2;
+
+    const bounds = [[latCenter - 1, lonCenter - 1], [latCenter + 1, lonCenter + 1]];
+
+    L.imageOverlay(region.buoyIconPath, bounds).addTo(map);
+  });
+}
+
     // Region knowledge base and quiz library
     const regions = [
-      {
-        id: 1,
-        name: "Region 1 West",
-        bounds: [
-          [-44.995, 140.63],
-          [-37.677, 150.282],
-        ], // Region 1 West Coordinates
-        knowledge:
-          "This region is a key migration corridor for humpback whales along Australia's west coast. Whales travel through this region on their way to feeding grounds.",
-        quiz: [
-          {
-            question: "Why do humpback whales pass through Region 1 West?",
-            options: [
-              "To feed on krill",
-              "To give birth to calves",
-              "To rest during migration",
-              "To travel to feeding grounds",
-            ],
-            answer: "To travel to feeding grounds",
-          },
-        ],
-      },
-      // ... Other region data ...
-    ];
+  {
+    id: 1,
+    name: "Region 1 West",
+    bounds: [[-44.995, 138.63], [-37.677, 148.282]],
+    knowledge: "This region is a key migration corridor for humpback whales along Australia's west coast. Whales travel through this region on their way to feeding grounds.",
+    quiz: [{
+      question: "Why do humpback whales pass through Region 1 West?",
+      options: ["To feed on krill", "To give birth to calves", "To rest during migration", "To travel to feeding grounds"],
+      answer: "To travel to feeding grounds",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 2,
+    name: "Region 1 East",
+    bounds: [[-44.992, 150.292], [-38.765, 159.943]],
+    knowledge: "In this region, whales are often seen resting along the eastern coastline of Australia during their migration.",
+    quiz: [{
+      question: "What activity do humpback whales primarily engage in while in Region 1 East?",
+      options: ["Feeding", "Resting during migration", "Mating", "Avoiding predators"],
+      answer: "Resting during migration",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 3,
+    name: "Region 2 West",
+    bounds: [[-37.664, 150.672], [-35.55, 151.28]],
+    knowledge: "This region serves as a critical stopover for whales where they prepare for the next leg of their migration towards the southern oceans.",
+    quiz: [{
+      question: "What makes Region 2 West important for humpback whales?",
+      options: ["It provides warm waters for mating", "It is a feeding area", "It serves as a resting point during migration", "It is a breeding ground"],
+      answer: "It serves as a resting point during migration",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 4,
+    name: "Region 2 East",
+    bounds: [[-37.665, 150.287], [-30.35, 153.312]],
+    knowledge: "In this region, whales feed on small fish and krill before continuing their journey towards breeding grounds.",
+    quiz: [{
+      question: "What is the primary activity of humpback whales in Region 2 East?",
+      options: ["Mating", "Feeding", "Resting", "Traveling towards breeding grounds"],
+      answer: "Feeding",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 5,
+    name: "Region 3 East",
+    bounds: [[-30.343, 156.378], [-23.044, 159.068]],
+    knowledge: "This region is a breeding ground for humpback whales. Whales give birth to calves in the warm waters here.",
+    quiz: [{
+      question: "Why do humpback whales visit Region 3 East?",
+      options: ["To feed", "To give birth to calves", "To avoid predators", "To rest"],
+      answer: "To give birth to calves",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 6,
+    name: "Region 3 West",
+    bounds: [[-30.35, 154.672], [-23.044, 155.287]],
+    knowledge: "In this region, humpback whales are frequently seen traveling with calves as they move to warmer waters for breeding.",
+    quiz: [{
+      question: "What behavior is commonly observed in humpback whales in Region 3 West?",
+      options: ["Mating and reproducing", "Traveling with calves", "Resting during migration", "Feeding on krill"],
+      answer: "Traveling with calves",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 7,
+    name: "Region 4 West",
+    bounds: [[-23.044, 151.672], [-20.0, 152.28]],
+    knowledge: "This is a crucial feeding area for humpback whales as they migrate along the northern regions of Australia's coast.",
+    quiz: [{
+      question: "What is the primary activity of humpback whales in Region 4 West?",
+      options: ["Feeding", "Mating", "Resting", "Traveling"],
+      answer: "Feeding",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  },
+  {
+    id: 8,
+    name: "Region 4 East",
+    bounds: [[-23.044, 153.378], [-20.0, 156.068]],
+    knowledge: "In this region, whales can often be seen socializing and communicating through songs as they prepare for their migration south.",
+    quiz: [{
+      question: "What unique behavior is often observed in Region 4 East?",
+      options: ["Socializing and communicating through songs", "Resting", "Mating", "Feeding"],
+      answer: "Socializing and communicating through songs",
+    }],
+    buoyIconPath: "buoy1.png",
+    quizCompleted: false 
+  }
+];
 
     // Check if boat enters a region
     function checkBoatInRegion(lat, lon) {
@@ -697,12 +805,23 @@
 
     // Show knowledge base content
     function showKnowledgeBase(region) {
-      document.getElementById("knowledge-title").innerText = region.name;
-      document.getElementById("knowledge-content").innerText =
-        region.knowledge;
-      document.getElementById("knowledge-popup-overlay").classList.add("show");
-      document.body.style.overflow = "hidden";
-    }
+  currentRegion = region; // Update the current region
+
+  // Check if the quiz is already completed
+  if (region.quizCompleted) {
+    // Do nothing if quiz is completed, no popups needed
+    return;
+  } else {
+    // Display knowledge base content with the option to start the quiz
+    document.getElementById("knowledge-title").innerText = region.name;
+    document.getElementById("knowledge-content").innerText = region.knowledge;
+    document.getElementById("knowledge-popup-overlay").classList.add("show");
+    document.body.style.overflow = "hidden";
+    currentQuiz = region.quiz;
+  }
+}
+
+
 
     // Start quiz
     let currentQuiz = [];
@@ -724,19 +843,38 @@
 
     // Submit quiz
     function submitQuiz() {
-      let correctCount = 0;
-      currentQuiz.forEach((q, index) => {
-        const selectedOption = document.querySelector(
-          `input[name="q${index}"]:checked`
-        );
-        if (selectedOption && selectedOption.value === q.answer) {
-          correctCount++;
-        }
-      });
-      alert(`You got ${correctCount} / ${currentQuiz.length} correct.`);
-      document.getElementById("quiz-popup-overlay").classList.remove("show");
-      document.body.style.overflow = "";
+  let correctCount = 0;
+  let feedbackHtml = ""; // HTML to store feedback information
+
+  currentQuiz.forEach((q, index) => {
+    const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+    if (selectedOption) {
+      if (selectedOption.value === q.answer) {
+        correctCount++;
+        feedbackHtml += `<p>Question ${index + 1}: Correct! You answered "${selectedOption.value}".</p>`;
+      } else {
+        // If the answer is incorrect, provide feedback with the correct answer
+        feedbackHtml += `<p>Question ${index + 1}: Incorrect. You answered "${selectedOption.value}", but the correct answer is "${q.answer}".</p>`;
+      }
+    } else {
+      // If the user didn't select any option
+      feedbackHtml += `<p>Question ${index + 1}: No answer selected. The correct answer is "${q.answer}".</p>`;
     }
+  });
+
+  // Summarize feedback information
+  feedbackHtml = `<p>You got ${correctCount} / ${currentQuiz.length} correct.</p>` + feedbackHtml;
+
+  // Update the quiz questions container with the feedback
+  document.getElementById("quiz-questions").innerHTML = feedbackHtml;
+
+  // Mark the current region's quiz as completed to prevent reopening
+  if (currentRegion) {
+    currentRegion.quizCompleted = true;
+  }
+}
+
+
 
   </script>
 </body>
