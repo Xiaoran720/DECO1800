@@ -4,12 +4,10 @@
   <meta charset="UTF-8" />
   <title>Whale Discovery Game with Leaflet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Include Leaflet CSS -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet/dist/leaflet.css"
   />
-  <!-- Include custom styles -->
   <link rel="stylesheet" href="DECO1800.css/base.css" />
   <link
     href="https://fonts.googleapis.com/css2?family=Merienda&display=swap"
@@ -112,15 +110,15 @@
     .popup-overlay {
       position: fixed;
       inset: 0;
-      display: none; /* Default hidden */
+      display: none; 
       align-items: center;
       justify-content: center;
-      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-      z-index: 9999; /* Increase z-index to ensure the popup is on top */
+      background-color: rgba(0, 0, 0, 0.5); 
+      z-index: 9999; 
     }
 
     .popup-overlay.show {
-      display: flex; /* Show popup */
+      display: flex; 
     }
 
     /* Popup styles */
@@ -252,7 +250,7 @@
     <nav>
       <ul>
         <li class="edu_page"><a href="edu_page.html">Whales Knowledge Base</a></li>
-        <li class="mvp"><a href="mvp-interact map.html">Interactive Map</a></li>
+        <li class="mvp"><a href="interactive_map.html">Interactive Map</a></li>
         <li class="game"><a href="game.html">Game To Know</a></li>
       </ul>
     </nav>
@@ -273,7 +271,7 @@
               <p>Now let's play the game! Feel free to explore the sea, spot as many whales as possible and answer questions!</p>
               <button onclick="closeStartGamePopup()">Start Game</button>
             </div>
-            <img src="whale.png" alt="Whale Image">
+            <img src="./image/whale.png" alt="Whale Image">
           </div>
         </div>
       </div>
@@ -316,7 +314,7 @@
         <div class="card-inner">
           <div class="popup-content">
             <h3>You discovered a whale!</h3>
-            <img src="whaletale.png" alt="Whale" style="width:100px; height:auto; margin-top: 10px;">
+            <img src="./image/whaletale.png" alt="Whale" style="width:100px; height:auto; margin-top: 10px;">
             <button onclick="closeWhalePopup()">Close</button>
           </div>
         </div>
@@ -413,7 +411,7 @@
 
       // Add boat marker
       boatIcon = L.icon({
-        iconUrl: "boat.png", // Please ensure the file path is correct
+        iconUrl: "image/boat.png", // Please ensure the file path is correct
         iconSize: [40, 40],
         iconAnchor: [20, 20],
       });
@@ -423,7 +421,7 @@
 
       // Add arrow marker
       var arrowIcon = L.icon({
-        iconUrl: 'arrow.png', // Please ensure the file path is correct
+        iconUrl: 'image/arrow.png', // Please ensure the file path is correct
         iconSize: [40, 40],
         iconAnchor: [20, 20],
       });
@@ -635,7 +633,7 @@
     // Add whale marker
     function addWhaleMarker(whale) {
       var whaletaleIcon = L.icon({
-        iconUrl: "whaletale.png",
+        iconUrl: "image/whaletale.png",
         iconSize: [30, 30],
         iconAnchor: [15, 15],
       });
@@ -668,7 +666,7 @@
       options: ["To feed on krill", "To give birth to calves", "To rest during migration", "To travel to feeding grounds"],
       answer: "To travel to feeding grounds",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -681,7 +679,7 @@
       options: ["Feeding", "Resting during migration", "Mating", "Avoiding predators"],
       answer: "Resting during migration",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -694,7 +692,7 @@
       options: ["It provides warm waters for mating", "It is a feeding area", "It serves as a resting point during migration", "It is a breeding ground"],
       answer: "It serves as a resting point during migration",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -707,7 +705,7 @@
       options: ["Mating", "Feeding", "Resting", "Traveling towards breeding grounds"],
       answer: "Feeding",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -720,7 +718,7 @@
       options: ["To feed", "To give birth to calves", "To avoid predators", "To rest"],
       answer: "To give birth to calves",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -733,7 +731,7 @@
       options: ["Mating and reproducing", "Traveling with calves", "Resting during migration", "Feeding on krill"],
       answer: "Traveling with calves",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -746,7 +744,7 @@
       options: ["Feeding", "Mating", "Resting", "Traveling"],
       answer: "Feeding",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   },
   {
@@ -759,7 +757,7 @@
       options: ["Socializing and communicating through songs", "Resting", "Mating", "Feeding"],
       answer: "Socializing and communicating through songs",
     }],
-    buoyIconPath: "buoy1.png",
+    buoyIconPath: "image/buoy1.png",
     quizCompleted: false 
   }
 ];
