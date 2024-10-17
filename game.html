@@ -839,7 +839,6 @@
       document.getElementById("quiz-questions").innerHTML = quizHtml;
     }
 
-    // Submit quiz
     function submitQuiz() {
   let correctCount = 0;
   let feedbackHtml = ""; // HTML to store feedback information
@@ -870,7 +869,12 @@
   if (currentRegion) {
     currentRegion.quizCompleted = true;
   }
+
+  // Hide or disable the submit button after submission
+  const submitButton = document.querySelector('#quiz-popup-overlay button');
+  submitButton.style.display = 'none'; // Hide the button after submission
 }
+
 
 
 
