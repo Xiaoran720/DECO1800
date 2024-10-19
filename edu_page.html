@@ -442,7 +442,15 @@
         document.querySelectorAll('.whale-sound-icon').forEach(icon => {
             icon.addEventListener('click', function() {
                 const audioElement = this.nextElementSibling; 
-                
+
+                document.querySelectorAll('.whale-sound').forEach(audio => {
+                    if (!audio.paused && audio !== audioElement) {
+                        audio.pause(); 
+                        audio.currentTime = 0; 
+                        audio.previousElementSibling.classList.remove('playing'); 
+                    }
+                });
+
                 if (audioElement) {
                     if (!audioElement.paused) {
                         audioElement.pause();
