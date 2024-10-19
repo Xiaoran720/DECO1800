@@ -441,18 +441,25 @@
 
         document.querySelectorAll('.whale-sound-icon').forEach(icon => {
             icon.addEventListener('click', function() {
-                const sound = this.dataset.sound; 
                 const audioElement = this.nextElementSibling; 
+                
                 if (audioElement) {
                     if (!audioElement.paused) {
                         audioElement.pause();
                         audioElement.currentTime = 0;
+                        this.classList.remove('playing');
                     } else {
                         audioElement.play();
+                        this.classList.add('playing');
                     }
+
+                    audioElement.onended = () => {
+                        this.classList.remove('playing');
+                    };
                 }
             });
         });
+
     </script>
 </body>
 </html>
