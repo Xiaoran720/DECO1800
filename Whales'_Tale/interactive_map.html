@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map of Whale Strandings and Sightings</title>
+    <link rel="stylesheet" href="./DECO1800.css/style.css">
+    <link rel="stylesheet" href="./DECO1800.css/base.css" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Merienda&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <p id="web_name">Whales' Tale</p>
+        <nav>
+            <ul>
+                <li class="edu_page"><a href="edu_page.html">Whales Knowledge Base</a></li>
+                <li class="mvp"><a href="interactive_map.html">Interactive Map</a></li>
+                <li class="game"><a href="game.html">Game To Know</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="login">Login</a>
+    </header>
+
+    <main>
+        <section class="map-section">
+            <h1>Map of Whales Strandings and Sightings</h1>
+            <p>Use the map below to explore whale strandings and sightings in Australia.</p>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </section>
+
+
+        <section class="controls">
+            <label for="timeSlider1">Start Year:</label>
+            <input type="range" id="timeSlider1" min="1980" max="2020" value="1980">
+            <span id="startYear">1980</span>
+
+            <label for="timeSlider2">End Year:</label>
+            <input type="range" id="timeSlider2" min="1980" max="2020" value="2020">
+            <span id="endYear">2020</span>
+        </section>
+
+        <section class="filter-section">
+            <h2>Choosing a Whale Species</h2>
+            <div style="display: flex;flex-direction: column;justify-content: center;margin-top: 20px;margin-left: 20px;" class="filter-options">
+                <div style="display: flex;" class="filter-group1">
+                    <input id="group1-title" checked type="checkbox" value="1223s"/>
+                    <h4 style="margin-left: 10px;">Mysticeti (baleen whales)</h4>
+                </div>
+                <div style="font-size: 15px;margin-left: 20px;margin-top: 10px;margin-bottom: 20px;">Baleen whales filter-feed using baleen plates instead of teeth.</div>
+
+                <div id="filter-checkboxe" class="filter-checkboxe" style="display: flex;flex-direction: row;margin-bottom: 30px;">
+                    <div style="display: flex;flex-direction: column;margin-left: 20px;align-items: center;">
+                        <img style="width: 180px;height: 130px;margin-bottom: 5px;" src="./image/Humpback whale (Megaptera novaeangliae).jpg"/>
+                        <div id="gg0" style="display: flex;flex-direction: row;">
+
+                        </div>
+                    </div>
+                    <div style="display: flex;flex-direction: column;margin-left: 40px;align-items: center;">
+                        <img style="width: 180px;height: 130px;margin-bottom: 5px;" src="./image/Southern right whale (Eubalaena australis).jpg"/>
+                        <div id="gg1" style="display: flex;flex-direction: row;">
+
+                        </div>
+                    </div>
+                    <div style="display: flex;flex-direction: column;margin-left: 40px;align-items: center;">
+                        <img style="width: 180px;height: 130px;margin-bottom: 5px;" src="./image/Blue whale (Balaenoptera musculus).jpg"/>
+                        <div id="gg2" style="display: flex;flex-direction: row;">
+
+                        </div>
+                    </div>
+                    <div style="display: flex;flex-direction: column;margin-left: 40px;align-items: center;">
+                        <img style="width: 180px;height: 130px;margin-bottom: 5px;" src="./image/dwarf minke whale.jpg"/>
+                        <div id="gg3" style="display: flex;flex-direction: row;">
+
+                        </div>
+                    </div>
+
+                    <div id="group1-right" style="display: flex;flex-direction: column;margin-left: 50px;justify-content:space-between;">
+
+                    </div>
+                </div>
+
+                <div style="display: flex;flex-direction: column;" class="filter-group2">
+                    <div style="display: flex;flex-direction: row;margin-bottom: 10px;">
+                        <input id="group2-title" class="group2-title" checked type="checkbox" value="1223s"/>
+                        <h4 style="margin-left: 10px;">Odontoceti (toothed whales)</h4>
+                    </div>
+
+                    <div style="font-size: 15px;margin-left: 20px;margin-bottom: 20px;">Toothed whales have teeth and include species such as dolphins, porpoises, and sperm whales.</div>
+
+                    <div style="display: flex;flex-direction: row;padding-left: 20px;">
+                        <input class="gg-11" id="group2-subtitle1" checked type="checkbox" value="1223s"/>
+                        <h5 style="margin-left: 10px;margin-bottom: 20px;">Whales</h5>
+                    </div>
+
+                    <div id="filter-checkbox-t">
+                        <div style="margin-left: 20px;display: flex;flex-direction: row;width: 90%;justify-content: space-between;">
+                            <div style="display: flex;flex-direction: column;margin-left: 20px;align-items: center;">
+                                <img style="width: 180px;height: 130px;" src="./image/Humpback whale (Megaptera novaeangliae).jpg"/>
+                                <div id="sub2-1" style="display: flex;flex-direction: row;margin-top: 5px;">
+        
+                                </div>
+                            </div>
+    
+                            <div id="sub2-2" style="display: flex;flex-direction: column;justify-content: space-between;height: 130px;margin-left: 50px;">
+                                
+                                
+                            </div>
+                            <div id="sub2-3" style="display: flex;flex-direction: column;justify-content: space-between;height: 130px;margin-left: 30px;">
+                                
+                                
+                            </div>
+                            <div id="sub2-4" style="display: flex;flex-direction: column;justify-content: space-between;height: 70px;margin-left: 30px;">
+                                
+                               
+                            </div>
+                        </div>
+    
+    
+                        <div style="display: flex;flex-direction: row;padding-left: 20px;margin-top: 20px;margin-bottom: 10px;">
+                            <input class="gg-11" id="group2-subtitle2" checked type="checkbox" value="1223s"/>
+                            <h5 style="margin-left: 10px;">Dolphins</h5>
+                        </div>
+                    </div>
+
+                    <div style="margin-left: 20px;" id="filter-checkbox-tt">
+                        <div id="sub3-1" style="display: flex;flex-direction: row;margin-left: 20px;width: 90%;margin-bottom: 10px;justify-content: space-between;">
+
+                        </div>
+                        <div id="sub3-2" style="display: flex;flex-direction: row;margin-left: 20px;width: 90%;margin-bottom: 10px;justify-content: space-between;">
+
+                    </div>
+
+                    </div>
+                </div>
+                
+
+                <div style="display: flex;flex-direction: column;"  class="filter-group3">
+                    <div style="display: flex;flex-direction: row;">
+                        <input id="group3-title" checked type="checkbox" value="1223s"/>
+                        <h4 style="margin-left: 10px;">Others</h4>
+                    </div>
+                    <div style="margin-left: 20px;margin-top: 10px;" id="filter-checkbox-ttt">
+                        <div id="group-3" style="display: flex;flex-direction: row;width: 40%;justify-content: space-between;">
+                        
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- <div style="margin-top: 20px;" id="filter-checkboxes" class="filter-checkboxes">
+
+                </div> -->
+            </div>
+        </section>
+        
+    </main>
+
+    <footer>
+        <p id="web_name">Whales' Tale</p>
+        <div class="footer-links">
+            <a href="#">Support</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Follow Us</a>
+        </div>
+    </footer>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoibHlsNTI1IiwiYSI6ImNtMHg3dDl5dzA5bDcycnB5ZzluZzRueXUifQ.P5n5ikx90MtIu4-NzSEmgQ';
+
+        var map = new mapboxgl.Map({
+            container: 'map', 
+            style: 'mapbox://styles/mapbox/streets-v11', 
+            center: [133.7751, -25.2744], 
+            zoom: 4 
+        });
+
+        var markers = {}; 
+        let whaleSpecies = new Set()
+        let settt = new Set()
+        var startYear = 1980;
+        var endYear = 2020;
+        let imageArray={
+            'humpback whale':'./image/Humpback whale (Megaptera novaeangliae).jpg',
+            'southern right whale':'./image/Southern right whale (Eubalaena australis).jpg',
+            'blue whale':'./image/Blue whale (Balaenoptera musculus).jpg',
+            'dwarf minke whale':'./image/dwarf minke whale.jpg',
+            'killer whale':'./image/Killer whale (Orcinus orca).jpg'
+        }
+        let goupMysticeti = ['fin whale',"bryde's whale",'sei whale','pygmy right whale']
+
+        let groupOdontoceti11 = ['sperm whale','pygmy sperm whale',
+            'melon-headed whale'
+        ]
+
+        let groupOdontoceti12 = ['long-finned pilot whale','short-finned pilot whale','false killer whale']
+
+        let groupOdontoceti13 = ["cuvier's beaked whale",'southern bottlenosed whale',
+        'pygmy killer whale']
+        let groupOdontoceti21 = [
+            'bottlenose dolphin','hourglass dolphin','dusky dolphin','spinner dolphin'
+            
+        ]
+
+        let groupOdontoceti22 = [
+'common dolphin','striped dolphin',"risso's dolphin",'southern right whale dolphin'
+        ]
+        let others = [
+            'dugong','southern elephant seal'
+        ]
+        fetch('Whale_dataset.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    const commonName = item['Southern Right Whale']; 
+                    const uuid = item['6b63056a-825d-4c7c-a9fc-efd128cd2e73']; 
+                    const latitude = parseFloat(item['-32.2']); 
+                    const longitude = parseFloat(item['115.7']); 
+                    const year = parseInt(item['1987']); 
+
+                    if (uuid && commonName && latitude && longitude && year) {
+                        whaleSpecies.add(commonName); 
+                        
+
+                        
+
+                        var marker = new mapboxgl.Marker()
+                            .setLngLat([longitude, latitude])
+                            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${commonName}</h3><p>Year: ${year}</p>`)) 
+                            .addTo(map);
+
+                        markers[uuid] = {
+                            marker: marker,
+                            commonName: commonName,
+                            year: year
+                        };
+                    }
+                });
+                
+                getCheckBox()
+                generateFilterCheckboxes();
+                updateMarkers(); 
+            });
+
+            function getCheckBox(){
+                whaleSpecies.forEach(species => {
+                if(species.trim().toLocaleLowerCase() == 'humpback whale'){
+                    const filterContainer = document.getElementById('gg0');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.addEventListener('change', updateMarkerOne); 
+                    checkbox.tagName='group1'
+                    checkbox.className = 'individual-checkbox g-1'
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(species.trim().toLocaleLowerCase() == 'southern right whale'){
+                    const filterContainer = document.getElementById('gg1');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-1'
+                    checkbox.addEventListener('change', updateMarkerOne); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(species.trim().toLocaleLowerCase() == 'blue whale'){
+                    const filterContainer = document.getElementById('gg2');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-1'
+                    checkbox.addEventListener('change', updateMarkerOne); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(species.trim().toLocaleLowerCase() == 'dwarf minke whale'){
+                    const filterContainer = document.getElementById('gg3');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-1'
+                    checkbox.addEventListener('change', updateMarkerOne); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(goupMysticeti.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('group1-right');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-1'
+                    checkbox.addEventListener('change', updateMarkerOne); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if (species.trim().toLocaleLowerCase() == 'killer whale'){
+                    const filterContainer = document.getElementById('sub2-1');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group2-1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-2-1'
+                    checkbox.addEventListener('change', updateMarkerTow); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(groupOdontoceti11.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('sub2-2');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group2-1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-2-1'
+                    checkbox.addEventListener('change', updateMarkerTow); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(groupOdontoceti12.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('sub2-3');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group2-1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-2-1'
+                    checkbox.addEventListener('change', updateMarkerTow); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(groupOdontoceti13.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('sub2-4');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group2-1'
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-2-1'
+                    checkbox.addEventListener('change', updateMarkerTow); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(groupOdontoceti21.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('sub3-1');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group3-1'
+                    checkbox.style.marginRight='10px'
+                    label.style.width = window.innerWidth*0.9/4 + 'px'
+                    label.style.fontSize='13px'
+                    checkbox.className = 'individual-checkbox g-3'
+                    checkbox.addEventListener('change', updateMarkerThree); 
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(groupOdontoceti22.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('sub3-2');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group3-1'
+                    checkbox.className = 'individual-checkbox g-3'
+                    checkbox.addEventListener('change', updateMarkerThree); 
+                    checkbox.style.marginRight='10px'
+                    label.style.width = window.innerWidth*0.9/4 + 'px'
+                    label.style.fontSize='13px'
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }else if(others.indexOf(species.trim().toLocaleLowerCase())>-1){
+                    const filterContainer = document.getElementById('group-3');
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = true; 
+                    checkbox.value = species;
+                    checkbox.tagName='group3-1'
+                    checkbox.className = 'individual-checkbox g-4'
+                    checkbox.addEventListener('change', updateMarkerFoure); 
+                    checkbox.style.marginRight='10px'
+                    label.style.fontSize='13px'
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(species));
+                    filterContainer.appendChild(label);
+                }
+                
+                
+            });
+            }
+
+function dataChange(){
+    settt.forEach((commonName)=>{
+                    if(goupMysticeti.indexOf(commonName.trim().toLocaleLowerCase())>-1){
+                            let obj = {
+                                label:commonName,
+                            commonName,
+                            group:'group1',
+                            image:imageArray[commonName.trim().toLocaleLowerCase()]}
+
+                                whaleSpecies.push(obj)
+                            
+                            
+                        
+                        }else if (groupOdontoceti1.indexOf(commonName.trim().toLocaleLowerCase())>-1){
+                            let obj = {
+                                label:commonName,
+                            commonName,
+                            group:'group2',
+                            subgroup:'subgroup2-1',
+                            image:imageArray[commonName.trim().toLocaleLowerCase()]}
+
+                                whaleSpecies.push(obj)
+                            
+                        }else if(groupOdontoceti2.indexOf(commonName.trim().toLocaleLowerCase())>-1){
+                            let obj = {
+                                label:commonName,
+                            commonName,
+                            group:'group2',
+                            subgroup:'subgroup2-2',
+                            }
+
+                                whaleSpecies.push(obj)
+                            
+                        }else if(others.indexOf(commonName.trim().toLocaleLowerCase())>-1){
+                        let obj = {
+                            label:commonName,
+                            commonName,
+                            group:'group3'
+                            }
+
+                                whaleSpecies.push(obj)
+                            
+                        }
+                })
+}
+
+         function filterChecks(){
+            const groups = {};
+
+            // Organize checkboxes by group and subgroup
+            whaleSpecies.forEach(cb => {
+                if (!groups[cb.group]) groups[cb.group] = {};
+                if (cb.subgroup) {
+                    if (!groups[cb.group][cb.subgroup]) groups[cb.group][cb.subgroup] = [];
+                    groups[cb.group][cb.subgroup].push(cb);
+                } else {
+                    if (!groups[cb.group]['default']) groups[cb.group]['default'] = [];
+                    groups[cb.group]['default'].push(cb);
+                }
+            });
+
+            const container = document.getElementById('filter-checkboxes');
+            Object.keys(groups).forEach(group => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'checkbox-group';
+
+            const groupLabel = document.createElement('label');
+            groupLabel.innerHTML = `<input type="checkbox" class="group-checkbox" data-group="${group}"> Select All`;
+            groupDiv.appendChild(groupLabel);
+
+            if(group === 'group1'){
+                const subTitle = document.createElement('div');
+                subTitle.textContent = 'Group 1 SubTitle';
+                groupDiv.appendChild(subTitle);
+
+                const horizontalDiv = document.createElement('div');
+                horizontalDiv.className = 'horizontal-checks';
+                groups[group]['default'].slice(0, 4).forEach(cb => {
+                    const label = document.createElement('label');
+                    label.className = 'checkbox-item';
+                    if (cb.image) {
+                        const img = document.createElement('img');
+                        img.src = cb.image;
+                        img.alt = cb.label;
+                        img.style.width = '50px';
+                        img.style.height = '50px';
+                        label.appendChild(img);
+                    }
+                    label.innerHTML += `<input type="checkbox" class="individual-checkbox" data-group="${group}" id="${cb.id}"> ${cb.label}`;
+                    horizontalDiv.appendChild(label);
+                });
+                groupDiv.appendChild(horizontalDiv);
+
+                const verticalDiv = document.createElement('div');
+                verticalDiv.className = 'vertical-checks';
+                groups[group]['default'].slice(4).forEach(cb => {
+                    const label = document.createElement('label');
+                    if (cb.image) {
+                        const img = document.createElement('img');
+                        img.src = cb.image;
+                        img.alt = cb.label;
+                        img.style.width = '50px';
+                        img.style.height = '50px';
+                        label.appendChild(img);
+                    }
+                    label.innerHTML += `<input type="checkbox" class="individual-checkbox" data-group="${group}" id="${cb.id}"> ${cb.label}`;
+                    verticalDiv.appendChild(label);
+                });
+                groupDiv.appendChild(verticalDiv);
+            } else {
+                Object.keys(groups[group]).forEach(subgroup => {
+                    if (subgroup !== 'default') {
+                        const subgroupDiv = document.createElement('div');
+                        subgroupDiv.className = 'checkbox-subgroup';
+
+                        const subgroupLabel = document.createElement('label');
+                        subgroupLabel.innerHTML = `<input type="checkbox" class="subgroup-checkbox" data-group="${group}" data-subgroup="${subgroup}"> Select All Subgroup`;
+                        subgroupDiv.appendChild(subgroupLabel);
+
+                        groups[group][subgroup].forEach(cb => {
+                            const label = document.createElement('label');
+                            if (cb.image) {
+                                const img = document.createElement('img');
+                                img.src = cb.image;
+                                img.alt = cb.label;
+                                img.style.width = '50px';
+                                img.style.height = '50px';
+                                label.appendChild(img);
+                            }
+                            label.innerHTML += `<input type="checkbox" class="individual-checkbox" data-group="${group}" data-subgroup="${subgroup}" id="${cb.id}"> ${cb.label}`;
+                            subgroupDiv.appendChild(label);
+                        });
+
+                        groupDiv.appendChild(subgroupDiv);
+                    } else {
+                        groups[group]['default'].forEach(cb => {
+                            const label = document.createElement('label');
+                            if (cb.image) {
+                                const img = document.createElement('img');
+                                img.src = cb.image;
+                                img.alt = cb.label;
+                                img.style.width = '50px';
+                                img.style.height = '50px';
+                                label.appendChild(img);
+                            }
+                            label.innerHTML += `<input type="checkbox" class="individual-checkbox" data-group="${group}" id="${cb.id}"> ${cb.label}`;
+                            groupDiv.appendChild(label);
+                        });
+                    }
+                });
+            }
+            container.appendChild(groupDiv);
+        });
+
+         // Event listeners for select all functionality
+         document.querySelectorAll('.group-checkbox').forEach(el => {
+            el.addEventListener('change', function(event) {
+                
+                const group = event.target.dataset.group;
+                const isChecked = event.target.checked;
+                document.querySelectorAll(`.individual-checkbox[data-group="${group}"]`).forEach(cb => {
+                    cb.checked = isChecked;
+                });
+                document.querySelectorAll(`.subgroup-checkbox[data-group="${group}"]`).forEach(cb => {
+                    cb.checked = isChecked;
+                });
+            });
+
+            updateMarkers()
+        });
+
+        document.querySelectorAll('.subgroup-checkbox').forEach(el => {
+            el.addEventListener('change', function(event) {
+                
+                const group = event.target.dataset.group;
+                const subgroup = event.target.dataset.subgroup;
+                const isChecked = event.target.checked;
+                document.querySelectorAll(`.individual-checkbox[data-group="${group}"][data-subgroup="${subgroup}"]`).forEach(cb => {
+                    cb.checked = isChecked;
+                });
+                // Check if subgroup select all should affect the group select all
+                const allChecked = document.querySelectorAll(`.individual-checkbox[data-group="${group}"]:checked`).length === 
+                                    document.querySelectorAll(`.individual-checkbox[data-group="${group}"]`).length;
+                document.querySelector(`.group-checkbox[data-group="${group}"]`).checked = allChecked;
+
+                updateMarkers()
+            });
+        });
+
+        // Event listeners for individual checkboxes to manage subgroup and group "select all" state
+        document.querySelectorAll('.individual-checkbox').forEach(el => {
+            el.addEventListener('change', function(event) {
+                const group = event.target.dataset.group;
+                const subgroup = event.target.dataset.subgroup;
+                if (subgroup) {
+                    const subgroupCheckbox = document.querySelector(`.subgroup-checkbox[data-group="${group}"][data-subgroup="${subgroup}"]`);
+                    const allCheckedInSubgroup = document.querySelectorAll(`.individual-checkbox[data-group="${group}"][data-subgroup="${subgroup}"]`).length ===
+                                                  document.querySelectorAll(`.individual-checkbox[data-group="${group}"][data-subgroup="${subgroup}"]:checked`).length;
+                    subgroupCheckbox.checked = allCheckedInSubgroup;
+                }
+                
+                const groupCheckbox = document.querySelector(`.group-checkbox[data-group="${group}"]`);
+                const allCheckedInGroup = document.querySelectorAll(`.individual-checkbox[data-group="${group}"]`).length ===
+                                           document.querySelectorAll(`.individual-checkbox[data-group="${group}"]:checked`).length;
+                groupCheckbox.checked = allCheckedInGroup;
+                updateMarkers()
+            });
+        });
+     }   
+        function generateFilterCheckboxes() {
+            
+            const filterContainer = document.getElementById('filter-checkboxes');
+            whaleSpecies.forEach(species => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = true; 
+                checkbox.value = species;
+                checkbox.addEventListener('change', updateMarkers); 
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(species));
+                filterContainer.appendChild(label);
+            });
+        }
+
+        function updateMarkers() {
+            let group1 = Array.from(document.querySelectorAll('#filter-checkboxe input:checked')).map(cb => cb.value)
+            let group2 = Array.from(document.querySelectorAll('#filter-checkbox-t input:checked')).map(cb => cb.value)
+            
+            let group3 = Array.from(document.querySelectorAll('#filter-checkbox-tt input:checked')).map(cb => cb.value)
+
+            let group4 = Array.from(document.querySelectorAll('#filter-checkbox-ttt input:checked')).map(cb => cb.value)
+            let allgroup = [...group1,...group2,...group3,...group4]
+            const selectedSpecies = new Set(
+                allgroup
+               
+                // Array.from(document.querySelectorAll('#filter-checkboxes input:checked')).map(cb => cb.value)
+            );
+
+            Object.keys(markers).forEach(uuid => {
+                const markerObj = markers[uuid];
+                const markerSpecies = markerObj.commonName;
+                const markerYear = markerObj.year;
+
+                if (selectedSpecies.has(markerSpecies) && markerYear >= startYear && markerYear <= endYear) {
+                    markerObj.marker.addTo(map);
+                } else {
+                    markerObj.marker.remove();
+                }
+            });
+        }
+
+       
+        const timeSlider1 = document.getElementById('timeSlider1');
+        const timeSlider2 = document.getElementById('timeSlider2');
+        const startYearDisplay = document.getElementById('startYear');
+        const endYearDisplay = document.getElementById('endYear');
+
+        timeSlider1.addEventListener('input', function () {
+            startYear = parseInt(this.value);
+            startYearDisplay.textContent = startYear;
+            updateMarkers(); 
+        });
+
+        timeSlider2.addEventListener('input', function () {
+            endYear = parseInt(this.value);
+            endYearDisplay.textContent = endYear;
+            updateMarkers(); 
+        });
+        
+        document.getElementById('group1-title').addEventListener('change',function(){
+            const checkboxs = document.querySelectorAll('.g-1');
+            checkboxs.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+            updateMarkers(); 
+        })
+
+        
+        function updateMarkerOne(){
+            const itemCheckboxes = document.querySelectorAll('.g-1');
+            const allChecked = document.querySelectorAll('.g-1:checked').length === itemCheckboxes.length;
+                const selectAllCheckbox = document.getElementById('group1-title');
+                selectAllCheckbox.checked = allChecked;
+                updateMarkers(); 
+        }
+        
+
+        document.getElementById('group2-subtitle1').addEventListener('change',function(){
+            const checkboxs = document.querySelectorAll('.g-2-1');
+            checkboxs.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+            const subcheckboxs = document.querySelectorAll('.gg-11:checked')
+
+            const selectAllCheckbox1 = document.getElementById('group2-title');
+            selectAllCheckbox1.checked = (subcheckboxs.length == 2?true:false);
+            updateMarkers(); 
+        })
+        function updateMarkerTow(){
+            const itemCheckboxes = document.querySelectorAll('.g-2-1');
+            const allChecked = document.querySelectorAll('.g-2-1:checked').length === itemCheckboxes.length;
+                const selectAllCheckbox = document.getElementById('group2-subtitle1');
+                selectAllCheckbox.checked = allChecked;
+
+                const subcheckboxs = document.querySelectorAll('.gg-11:checked')
+
+            const selectAllCheckbox1 = document.getElementById('group2-title');
+            selectAllCheckbox1.checked = (subcheckboxs.length == 2?true:false);
+                updateMarkers(); 
+
+        }
+
+        
+        document.getElementById('group2-subtitle2').addEventListener('change',function(){
+            const checkboxs = document.querySelectorAll('.g-3');
+            checkboxs.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+
+            const subcheckboxs = document.querySelectorAll('.gg-11:checked')
+
+            const selectAllCheckbox1 = document.getElementById('group2-title');
+            selectAllCheckbox1.checked = (subcheckboxs.length == 2?true:false);
+            updateMarkers(); 
+        })
+
+        function updateMarkerThree(){
+            const itemCheckboxes = document.querySelectorAll('.g-3');
+            const allChecked = document.querySelectorAll('.g-3:checked').length === itemCheckboxes.length;
+                const selectAllCheckbox = document.getElementById('group2-subtitle2');
+                selectAllCheckbox.checked = allChecked;
+
+                const subcheckboxs = document.querySelectorAll('.gg-11:checked')
+
+            const selectAllCheckbox1 = document.getElementById('group2-title');
+            selectAllCheckbox1.checked = (subcheckboxs.length == 2?true:false);
+                updateMarkers(); 
+        }
+
+        document.getElementById('group3-title').addEventListener('change',function(){
+            const checkboxs = document.querySelectorAll('.g-4');
+            checkboxs.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+            updateMarkers(); 
+        })
+        function updateMarkerFoure(){
+            const itemCheckboxes = document.querySelectorAll('.g-4');
+            const allChecked = document.querySelectorAll('.g-4:checked').length === itemCheckboxes.length;
+                const selectAllCheckbox = document.getElementById('group3-title');
+                selectAllCheckbox.checked = allChecked;
+                updateMarkers(); 
+        }
+
+        
+        document.getElementById('group2-title').addEventListener('change',function(){
+            const checkboxs = document.querySelectorAll('.gg-11');
+            checkboxs.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+            const checkboxs1 = document.querySelectorAll('.g-3');
+            checkboxs1.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+            const checkboxs2 = document.querySelectorAll('.g-2-1');
+            checkboxs2.forEach(checkbx=>{
+                checkbx.checked = this.checked
+            })
+            updateMarkers(); 
+        })
+    </script>
+
+</body>
+</html>
