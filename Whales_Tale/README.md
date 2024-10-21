@@ -6,7 +6,7 @@ This website is a group project for deco7180/deco1800 at the University of Queen
 
 ## Contents
 - Science and education page (edu_page.html)
-- Observation map page (interactive_map.html)
+- Interactive map  (interactive_map.html)
 - Game page (game.html)
   
 ## Code Overview
