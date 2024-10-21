@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Whale Discovery Game with Leaflet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="DECO1800.css/base.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merienda&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Moul&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+
+      header {
+        background-image: linear-gradient(
+          rgba(107, 171, 245, 0.8),
+          rgba(81, 129, 185, 0.8),
+          rgba(62, 100, 143, 0.8)
+        );
+        display: flex;
+        align-items: center;
+        padding: 0;
+        height: 90px;
+      }
+      #web_name {
+        color: white;
+        font-family: "Merienda", cursive;
+        font-size: 40px;
+        font-weight: 700;
+        text-align: left;
+        margin-left: 20px;
+        line-height: normal;
+        flex: 1;
+      }
+      header nav li.game {
+        color: black;
+        background-color: #f1f1f1;
+        padding: 50px 0px;
+        margin: 0;
+      }
+      header nav li.game a {
+        color: black;
+      }
+      header nav {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        margin-left: 90px;
+      }
+      header nav ul {
+        display: flex;
+      }
+      header nav li {
+        display: flex;
+        font-size: 20px;
+        align-items: center;
+      }
+      header nav li a {
+        padding: 0 10px;
+      }
+      header nav li a:hover {
+        color: black;
+        text-decoration: underline;
+      }
+
+      header .login {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 20px;
+        flex: 1;
+        text-align: right;
+      }
+
+      #game-container {
+        position: relative;
+        width: 100%;
+        height: calc(
+          100% - 90px - 50px
+        ); /* Subtract header and footer height */
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+      /* Real-time distance display styles */
+      #distance-display {
+        position: absolute;
+        top: 10px;
+        left: 50px;
+        padding: 5px 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ccc;
+        font-size: 16px;
+        z-index: 1000;
+      }
+      /* Overlay styles */
+      .popup-overlay {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      }
+
+      .popup-overlay.show {
+        display: flex;
+      }
+
+      /* Popup styles */
+      .popup {
+        width: 60%;
+        max-width: 600px;
+        padding: 20px;
+        /* Remove background color */
+        /* background-color: white; */
+        border-radius: 35px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+          rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+          rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        /* Add background image */
+        background-image: url("background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      .popup h2,
+      .popup h3 {
+        margin-top: 0;
+      }
+      /* Card styles */
+      .card {
+        --bg: #e8e8e8;
+        --contrast: #e2e0e0;
+        --grey: #93a1a1;
+        position: relative;
+        padding: 20px;
+        /* Remove background color */
+        /* background-color: var(--bg); */
+        border-radius: 35px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+          rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+          rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+      }
+      .card-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: repeating-conic-gradient(
+            var(--bg) 0.0000001%,
+            var(--grey) 0.000104%
+          )
+          60% 60%/600% 600%;
+        filter: opacity(10%) contrast(105%);
+      }
+      .card-inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        /* Remove background color */
+        /* background-color: var(--contrast); */
+        border-radius: 30px;
+        /* Content style */
+        font-size: 18px;
+        font-weight: 900;
+        color: #333;
+        text-align: center;
+        font-family: monospace;
+      }
+      /* Popup content styles, add semi-transparent background to improve readability */
+      .popup-content {
+        /* background-color: rgba(255, 255, 255, 0.8); */
+        background: linear-gradient(to bottom, #6BABF5, #31527A);
+        padding: 20px;
+        border-radius: 15px;
+      }
+      /* Button styles */
+      .popup-content > button {
+        /* padding: 10px 20px; */
+        background-color: rgba(50, 50, 93, 0);
+        color: #fff;
+        border: none;
+        font-size: 15px;
+        /* border-radius: 5px; */
+        cursor: pointer;
+        margin: 5px;
+      }
+      .popup button:hover {
+        background-color: #4d8cd7;
+      }
+      /* Footer styles */
+      footer {
+        background-image: linear-gradient(
+          rgba(107, 171, 245, 0.8),
+          rgba(81, 129, 185, 0.8),
+          rgba(62, 100, 143, 0.8)
+        );
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        margin: 0;
+        height: 50px;
+      }
+      .footer-links {
+        justify-content: center;
+      }
+      .footer-links a {
+        margin-right: 20px;
+      }
+      .footer-links a:last-child {
+        margin-right: 0;
+      }
+      footer div a:hover {
+        color: black;
+        text-decoration: underline;
+      }
+      /* Start game popup content styles */
+      .startgame-content {
+        display: flex;
+        align-items: center;
+      }
+      .startgame-content img {
+        width: 150px;
+        height: auto;
+        margin-left: 20px;
+      }
+      @media (max-width: 600px) {
+        .startgame-content {
+          flex-direction: column;
+        }
+        .startgame-content img {
+          margin-left: 0;
+          margin-top: 20px;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <p id="web_name">Whales' Tale</p>
+      <nav>
+        <ul>
+          <li class="edu_page">
+            <a href="edu_page.html">Whales Knowledge Base</a>
+          </li>
+          <li class="mvp">
+            <a href="interactive_map.html">Interactive Map</a>
+          </li>
+          <li class="game"><a href="game.html">Game To Know</a></li>
+        </ul>
+      </nav>
+      <a href="#" class="login">Login</a>
+    </header>
+    <div id="game-container">
+      <div id="map"></div>
+      <div id="distance-display">Distance: 0 km</div>
+
+      <!-- Start game popup -->
+      <div id="startgame-popup-overlay" class="popup-overlay show">
+        <div id="startgame-popup" class="popup card">
+          <div class="card-overlay"></div>
+          <div class="card-inner">
+            <div class="popup-content startgame-content">
+              <div>
+                <h2>The Journey of Humpback Whales</h2>
+                <p>
+                  Now let's explore the sea and spot as many whales as possible.</p>
+                  <p>
+                  These are the real discovery sites detected. Let's follow their journey and help them!
+                </p>
+                <button
+                  onclick="closeStartGamePopup()"
+                  style="
+                    padding: 10px 20px;
+                    background-color: #62a9f9;
+                    color: #fff;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin: 5px;
+                  "
+                >
+                  Start Game
+                </button>
+              </div>
+              <img src="./image/whale.png" alt="Whale Image" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Knowledge base popup -->
+      <div id="knowledge-popup-overlay" class="popup-overlay">
+        <div id="knowledge-popup" class="popup card">
+          <div class="card-overlay"></div>
+          <div class="card-inner">
+            <div class="popup-content">
+              <h2 id="knowledge-title">Knowledge Base</h2>
+              <img
+                src="./image/contentimage.png"
+                alt="Whale"
+                style="width: 200px; height: auto; margin-top: 10px"
+              />
+              <p style="color: #8B1A10;" id="knowledge-content">
+                Here will display knowledge related to the selected region.
+              </p>
+              <div style="display: flex;flex-direction: row;justify-content: space-around;margin-top: 20px;">
+                <div style="color: #fff;font-size: 15px;" onclick="startQuiz()">Start Quiz</div>
+                <div style="color: #fff;font-size: 15px;" onclick="closeKnowledgePopup()">Close</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz popup -->
+      <div id="quiz-popup-overlay" class="popup-overlay">
+        <div id="quiz-popup" class="popup card">
+          <div class="card-overlay"></div>
+          <div class="card-inner">
+            <div class="popup-content">
+              <h2>Quiz</h2>
+              <div style="font-size: 32px;" id="quiz-questions"></div>
+              <button onclick="submitQuiz()">Submit Quiz</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Whale discovered popup -->
+      <div id="whale-popup-overlay" class="popup-overlay">
+        <div id="whale-popup" class="popup card">
+          <div class="card-overlay"></div>
+          <div class="card-inner">
+            <div class="popup-content">
+              <h3>You discovered a whale!</h3>
+              <img
+                src="./image/whaletale.png"
+                alt="Whale"
+                style="width: 100px; height: auto; margin-top: 10px"
+              />
+              <button onclick="closeWhalePopup()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p id="web_name">Whales' Tale</p>
+      <div class="footer-links">
+        <a href="#">Support</a>
+        <a href="#">Contact Us</a>
+        <a href="#">Follow Us</a>
+      </div>
+    </footer>
+
+    <!-- Include Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Include Leaflet.RotatedMarker plugin -->
+    <script src="https://rawgit.com/bbecquet/Leaflet.RotatedMarker/master/leaflet.rotatedMarker.js"></script>
+    <script>
+      var map;
+      var boatPosition;
+      var boatIcon;
+      var boatMarker;
+      var whalePositions = []; // Store whale positions
+      var dataLoaded = false;
+      var overlayClicked = false;
+      var foundWhaleMarkers = []; // Store markers of found whales
+      var arrowMarker; // Arrow marker
+
+      // Define discovery distance threshold in global scope
+      var discoveryDistance = 30; // Set discovery distance threshold to 30 km
+
+      // Load whale data
+      fetch("gamedata.json")
+        .then((response) => response.json())
+        .then((data) => {
+          // Filter out data with valid latitude and longitude
+          var validEntries = data.filter(
+            (entry) =>
+              entry["location-long"] &&
+              entry["location-lat"] &&
+              !isNaN(entry["location-long"]) &&
+              !isNaN(entry["location-lat"])
+          );
+          // Randomly select 5 whale coordinates
+          for (var i = 0; i < 5; i++) {
+            var randomIndex = Math.floor(Math.random() * validEntries.length);
+            var entry = validEntries.splice(randomIndex, 1)[0]; // Prevent duplication
+            whalePositions.push({
+              lat: parseFloat(entry["location-lat"]), // Latitude first
+              lng: parseFloat(entry["location-long"]), // Longitude next
+              found: false,
+            });
+          }
+          dataLoaded = true;
+          if (overlayClicked) {
+            initializeGame();
+          }
+        })
+        .catch((error) => console.error(error));
+
+      // After page loads, show start game popup
+      document.addEventListener("DOMContentLoaded", function () {
+        overlayClicked = true;
+        if (dataLoaded) {
+          initializeGame();
+        }
+      });
+
+      function closeStartGamePopup() {
+        document
+          .getElementById("startgame-popup-overlay")
+          .classList.remove("show");
+        document.body.style.overflow = "";
+      }
+
+      function initializeGame() {
+        // Initial boat position
+        boatPosition = { lat: -24, lng: 176 }; // Latitude first, longitude next
+
+        // Create map
+        map = L.map("map", {
+          center: [boatPosition.lat, boatPosition.lng],
+          zoom: 5,
+          zoomControl: true, // Enable map zooming
+          attributionControl: true,
+        });
+
+        // Add map tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        // Add boat marker
+        boatIcon = L.icon({
+          iconUrl: "image/boat.png", // Please ensure the file path is correct
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
+        });
+        boatMarker = L.marker([boatPosition.lat, boatPosition.lng], {
+          icon: boatIcon,
+        }).addTo(map);
+
+        // Add arrow marker
+        var arrowIcon = L.icon({
+          iconUrl: "image/arrow.png", // Please ensure the file path is correct
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
+        });
+        arrowMarker = L.marker([boatPosition.lat, boatPosition.lng], {
+          icon: arrowIcon,
+          rotationAngle: 0, // Initial angle
+          rotationOrigin: "center center",
+        }).addTo(map);
+
+        // Disable some interactions to simulate game scene
+        map.scrollWheelZoom.disable();
+        map.boxZoom.disable();
+        map.keyboard.disable();
+
+        // Keyboard controls boat movement
+        document.addEventListener("keydown", function (event) {
+          var moveDistance = 0.5;
+          var newLat = boatPosition.lat;
+          var newLng = boatPosition.lng;
+
+          switch (event.key) {
+            case "ArrowUp":
+              newLat += moveDistance;
+              break;
+            case "ArrowDown":
+              newLat -= moveDistance;
+              break;
+            case "ArrowLeft":
+              newLng -= moveDistance;
+              break;
+            case "ArrowRight":
+              newLng += moveDistance;
+              break;
+            default:
+              return;
+          }
+
+          // Update boat position
+          boatPosition.lat = newLat;
+          boatPosition.lng = newLng;
+
+          // Update map center and marker position
+          map.setView([boatPosition.lat, boatPosition.lng]);
+          boatMarker.setLatLng([boatPosition.lat, boatPosition.lng]);
+
+          updateGame(); // Update game state
+        });
+
+        addBuoyIcons(map, regions);
+
+        // Initialize game
+        updateGame();
+      }
+
+      // Calculate bearing function
+      function calculateBearing(lat1, lon1, lat2, lon2) {
+        var φ1 = (lat1 * Math.PI) / 180;
+        var φ2 = (lat2 * Math.PI) / 180;
+        var λ1 = (lon1 * Math.PI) / 180;
+        var λ2 = (lon2 * Math.PI) / 180;
+
+        var y = Math.sin(λ2 - λ1) * Math.cos(φ2);
+        var x =
+          Math.cos(φ1) * Math.sin(φ2) -
+          Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
+        var θ = Math.atan2(y, x);
+        var bearing = ((θ * 180) / Math.PI + 360) % 360; // Convert to degrees and normalize to 0-360 degrees
+        return bearing;
+      }
+
+      // Update arrow direction and position
+      function updateArrow(closestWhale) {
+        if (closestWhale) {
+          var bearing = calculateBearing(
+            boatPosition.lat,
+            boatPosition.lng,
+            closestWhale.lat,
+            closestWhale.lng
+          );
+
+          // Update arrow position to boat's position
+          arrowMarker.setLatLng([boatPosition.lat, boatPosition.lng]);
+
+          // Update arrow rotation angle
+          arrowMarker.setRotationAngle(bearing);
+        }
+      }
+
+      // Update boat position and real-time distance
+      function updateGame() {
+        // Calculate distance to nearest whale
+        var closestDistance = Infinity;
+        var closestWhale = null; // Store the nearest whale
+        whalePositions.forEach(function (whale) {
+          if (!whale.found) {
+            var distance = calculateDistance(
+              boatPosition.lat,
+              boatPosition.lng,
+              whale.lat,
+              whale.lng
+            );
+            if (distance < closestDistance) {
+              closestDistance = distance;
+              closestWhale = whale; // Update nearest whale
+            }
+            // Check if the boat is in a region
+            var region = checkBoatInRegion(boatPosition.lat, boatPosition.lng);
+            if (region) {
+              // Only show knowledge base if quiz is not completed
+              if (!region.quizCompleted) {
+                showKnowledgeBase(region);
+              }
+            } else {
+              hidePopups(); // Hide popups if not in any region
+            }
+          }
+        });
+
+        // Update distance display
+        if (closestDistance !== Infinity) {
+          updateDistanceDisplay(closestDistance);
+          updateArrow(closestWhale); // Update arrow
+        } else {
+          document.getElementById("distance-display").textContent =
+            "All whales found!";
+          if (arrowMarker) {
+            map.removeLayer(arrowMarker); // Remove arrow
+          }
+        }
+
+        // Check if a whale is discovered
+        checkWhaleDiscovery();
+
+        // Check if boat enters region
+        var region = checkBoatInRegion(boatPosition.lat, boatPosition.lng);
+        if (region) {
+          currentQuiz = region.quiz;
+          showKnowledgeBase(region);
+        } else {
+          hidePopups();
+        }
+      }
+
+      // Calculate distance using Haversine formula
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Earth radius, in kilometers
+        var dLat = ((lat2 - lat1) * Math.PI) / 180;
+        var dLon = ((lon2 - lon1) * Math.PI) / 180;
+        var a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((lat1 * Math.PI) / 180) *
+            Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var distance = R * c;
+        return distance;
+      }
+
+      // Update distance display
+      function updateDistanceDisplay(distance) {
+        var distanceInKm = distance.toFixed(2); // Distance is already in kilometers
+        document.getElementById("distance-display").textContent =
+          "Distance: " + distanceInKm + " km";
+      }
+
+      // Check if a whale is discovered
+      function checkWhaleDiscovery() {
+        whalePositions.forEach(function (whale, index) {
+          if (!whale.found) {
+            var distance = calculateDistance(
+              boatPosition.lat,
+              boatPosition.lng,
+              whale.lat,
+              whale.lng
+            );
+            if (distance <= discoveryDistance) {
+              whale.found = true;
+              addWhaleMarker(whale);
+              showWhalePopup(whale);
+            }
+          }
+        });
+      }
+
+      // Show whale popup
+      function showWhalePopup(whale) {
+        console.log("showWhalePopup called"); // Debug info
+        var popupOverlay = document.getElementById("whale-popup-overlay");
+        if (popupOverlay) {
+          popupOverlay.classList.add("show");
+          document.body.style.overflow = "hidden";
+        } else {
+          console.error("whale-popup-overlay element not found");
+        }
+      }
+
+      // Close whale popup
+      function closeWhalePopup() {
+        var popupOverlay = document.getElementById("whale-popup-overlay");
+        if (popupOverlay) {
+          popupOverlay.classList.remove("show");
+          document.body.style.overflow = "";
+        } else {
+          console.error("whale-popup-overlay element not found");
+        }
+      }
+
+      // Add whale marker
+      function addWhaleMarker(whale) {
+        var whaletaleIcon = L.icon({
+          iconUrl: "image/whaletale.png",
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+        });
+        var marker = L.marker([whale.lat, whale.lng], {
+          icon: whaletaleIcon,
+        }).addTo(map);
+        foundWhaleMarkers.push(marker); // Add marker to array for later management
+      }
+
+      //add buoyicons
+      function addBuoyIcons(map, regions) {
+        regions.forEach((region) => {
+          const latCenter = (region.bounds[0][0] + region.bounds[1][0]) / 2;
+          const lonCenter = (region.bounds[0][1] + region.bounds[1][1]) / 2;
+
+          const bounds = [
+            [latCenter - 1, lonCenter - 1],
+            [latCenter + 1, lonCenter + 1],
+          ];
+
+          L.imageOverlay(region.buoyIconPath, bounds).addTo(map);
+        });
+      }
+
+      // Region knowledge base and quiz library
+      const regions = [
+        {
+          id: 1,
+          name: "Region 1 West",
+          bounds: [
+            [-44.995, 138.63],
+            [-37.677, 148.282],
+          ],
+          knowledge:
+            "This region is a key migration corridor for humpback whales along Australia's west coast. Whales travel through this region on their way to feeding grounds.",
+          quiz: [
+            {
+              question: "Why do humpback whales pass through Region 1 West?",
+              options: [
+                "To feed on krill",
+                "To give birth to calves",
+                "To rest during migration",
+                "To travel to feeding grounds",
+              ],
+              answer: "To travel to feeding grounds",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 2,
+          name: "Region 1 East",
+          bounds: [
+            [-44.992, 150.292],
+            [-38.765, 159.943],
+          ],
+          knowledge:
+            "In this region, whales are often seen resting along the eastern coastline of Australia during their migration.",
+          quiz: [
+            {
+              question:
+                "What activity do humpback whales primarily engage in while in Region 1 East?",
+              options: [
+                "Feeding",
+                "Resting during migration",
+                "Mating",
+                "Avoiding predators",
+              ],
+              answer: "Resting during migration",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 3,
+          name: "Region 2 West",
+          bounds: [
+            [-37.664, 150.672],
+            [-35.55, 151.28],
+          ],
+          knowledge:
+            "This region serves as a critical stopover for whales where they prepare for the next leg of their migration towards the southern oceans.",
+          quiz: [
+            {
+              question:
+                "What makes Region 2 West important for humpback whales?",
+              options: [
+                "It provides warm waters for mating",
+                "It is a feeding area",
+                "It serves as a resting point during migration",
+                "It is a breeding ground",
+              ],
+              answer: "It serves as a resting point during migration",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 4,
+          name: "Region 2 East",
+          bounds: [
+            [-37.665, 150.287],
+            [-30.35, 153.312],
+          ],
+          knowledge:
+            "In this region, whales feed on small fish and krill before continuing their journey towards breeding grounds.",
+          quiz: [
+            {
+              question:
+                "What is the primary activity of humpback whales in Region 2 East?",
+              options: [
+                "Mating",
+                "Feeding",
+                "Resting",
+                "Traveling towards breeding grounds",
+              ],
+              answer: "Feeding",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 5,
+          name: "Region 3 East",
+          bounds: [
+            [-30.343, 156.378],
+            [-23.044, 159.068],
+          ],
+          knowledge:
+            "This region is a breeding ground for humpback whales. Whales give birth to calves in the warm waters here.",
+          quiz: [
+            {
+              question: "Why do humpback whales visit Region 3 East?",
+              options: [
+                "To feed",
+                "To give birth to calves",
+                "To avoid predators",
+                "To rest",
+              ],
+              answer: "To give birth to calves",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 6,
+          name: "Region 3 West",
+          bounds: [
+            [-30.35, 154.672],
+            [-23.044, 155.287],
+          ],
+          knowledge:
+            "In this region, humpback whales are frequently seen traveling with calves as they move to warmer waters for breeding.",
+          quiz: [
+            {
+              question:
+                "What behavior is commonly observed in humpback whales in Region 3 West?",
+              options: [
+                "Mating and reproducing",
+                "Traveling with calves",
+                "Resting during migration",
+                "Feeding on krill",
+              ],
+              answer: "Traveling with calves",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 7,
+          name: "Region 4 West",
+          bounds: [
+            [-23.044, 151.672],
+            [-20.0, 152.28],
+          ],
+          knowledge:
+            "This is a crucial feeding area for humpback whales as they migrate along the northern regions of Australia's coast.",
+          quiz: [
+            {
+              question:
+                "What is the primary activity of humpback whales in Region 4 West?",
+              options: ["Feeding", "Mating", "Resting", "Traveling"],
+              answer: "Feeding",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+        {
+          id: 8,
+          name: "Region 4 East",
+          bounds: [
+            [-23.044, 153.378],
+            [-20.0, 156.068],
+          ],
+          knowledge:
+            "In this region, whales can often be seen socializing and communicating through songs as they prepare for their migration south.",
+          quiz: [
+            {
+              question:
+                "What unique behavior is often observed in Region 4 East?",
+              options: [
+                "Socializing and communicating through songs",
+                "Resting",
+                "Mating",
+                "Feeding",
+              ],
+              answer: "Socializing and communicating through songs",
+            },
+          ],
+          buoyIconPath: "image/buoy1.png",
+          quizCompleted: false,
+        },
+      ];
+
+      // Check if boat enters a region
+      function checkBoatInRegion(lat, lon) {
+        for (let region of regions) {
+          let latMin = Math.min(region.bounds[0][0], region.bounds[1][0]);
+          let latMax = Math.max(region.bounds[0][0], region.bounds[1][0]);
+          let lonMin = Math.min(region.bounds[0][1], region.bounds[1][1]);
+          let lonMax = Math.max(region.bounds[0][1], region.bounds[1][1]);
+
+          if (
+            lat >= latMin &&
+            lat <= latMax &&
+            lon >= lonMin &&
+            lon <= lonMax
+          ) {
+            return region;
+          }
+        }
+        return null;
+      }
+
+      // Close popups
+      function hidePopups() {
+        document
+          .getElementById("knowledge-popup-overlay")
+          .classList.remove("show");
+        document.getElementById("quiz-popup-overlay").classList.remove("show");
+        document.body.style.overflow = ""; // Restore page scrolling
+      }
+
+      // Close knowledge base popup
+      function closeKnowledgePopup() {
+        document
+          .getElementById("knowledge-popup-overlay")
+          .classList.remove("show");
+        document.body.style.overflow = "";
+      }
+
+      // Close quiz popup
+      function closeQuizPopup() {
+        document.getElementById("quiz-popup-overlay").classList.remove("show");
+        document.body.style.overflow = "";
+      }
+
+      // Show knowledge base content
+      function showKnowledgeBase(region) {
+        currentRegion = region; // Update the current region
+
+        // Check if the quiz is already completed
+        if (region.quizCompleted) {
+          // Do nothing if quiz is completed, no popups needed
+          return;
+        } else {
+          // Display knowledge base content with the option to start the quiz
+          document.getElementById("knowledge-title").innerText = region.name;
+          document.getElementById("knowledge-content").innerText =
+            region.knowledge;
+          document
+            .getElementById("knowledge-popup-overlay")
+            .classList.add("show");
+          document.body.style.overflow = "hidden";
+          currentQuiz = region.quiz;
+        }
+      }
+
+      // Start quiz
+      function startQuiz() {
+        document
+          .getElementById("knowledge-popup-overlay")
+          .classList.remove("show");
+        document.getElementById("quiz-popup-overlay").classList.add("show");
+
+        let quizHtml = "";
+        currentQuiz.forEach((q, index) => {
+          quizHtml += `<p style='font-size: 18px;margin-bottom:15px'>${index + 1}. ${q.question}</p>`;
+          quizHtml += q.options
+            .map(
+              (option) =>
+                `<label style='font-size: 18px;margin-bottom:15px'><input type="radio" name="q${index}" value="${option}"> ${option}</label><br><br>`
+            )
+            .join("");
+        });
+
+        // Update the Quiz questions container and add the Submit Quiz button
+        const quizContainer = document.getElementById("quiz-questions");
+        quizContainer.innerHTML = quizHtml;
+
+        // Reset the button container so that every time the quiz is opened, the Submit Quiz button is displayed
+        const buttonContainer = document.getElementById("quiz-popup-overlay");
+        buttonContainer.innerHTML = `
+    <div style='display: flex;flex-direction: column;align-items: center;' class="popup-content">
+      <h2>Quiz</h2>
+      <img hidden style='with:200px;height:200px' src="./image/wrong.png"/>
+      <div id="quiz-questions">${quizHtml}</div>
+      <button onclick="submitQuiz()">Submit Quiz</button> <!-- Display Submit Quiz button each time a new area is entered -->
+    </div>
+  `;
+      }
+
+      // Submit quiz
+      function submitQuiz() {
+        let correctCount = 0;
+        let feedbackHtml = ""; // HTML to store feedback information
+        const imageButton = document.querySelector(
+          '#quiz-popup-overlay img'
+        );
+        currentQuiz.forEach((q, index) => {
+          const selectedOption = document.querySelector(
+            `input[name="q${index}"]:checked`
+          );
+          if (selectedOption) {
+            if (selectedOption.value === q.answer) {
+              imageButton.src = './image/correct.png'
+              correctCount++;
+              feedbackHtml += `<p style='color:#8B1A10'>Question ${
+                index + 1
+              }: Correct! You answered "${selectedOption.value}".</p>`;
+            } else {
+              feedbackHtml += `<p style='color:#8B1A10'>Question ${
+                index + 1
+              }: Incorrect. You answered "${
+                selectedOption.value
+              }", but the correct answer is "${q.answer}".</p>`;
+            }
+          } else {
+            feedbackHtml += `<p style='color:#8B1A10'>Question ${
+              index + 1
+            }: No answer selected. The correct answer is "${q.answer}".</p>`;
+          }
+        });
+
+        // Summarize feedback information
+        feedbackHtml =
+          `<p style='color:#8B1A10'>You got ${correctCount} / ${currentQuiz.length} correct.</p>` +
+          feedbackHtml;
+
+        // Update the Quiz questions container to display feedback
+        document.getElementById("quiz-questions").innerHTML = feedbackHtml;
+
+        // Mark the current region's quiz as completed to prevent reopening
+        if (currentRegion) {
+          currentRegion.quizCompleted = true;
+        }
+
+        // Replace the "Submit Quiz" button with a "Close" button
+        const submitButton = document.querySelector(
+          '#quiz-popup-overlay button[onclick="submitQuiz()"]'
+        );
+        
+        imageButton.hidden = false
+        if (submitButton) {
+          submitButton.textContent = "Close"; // Change button text to "Close"
+          submitButton.onclick = closeQuizPopup; // Change button function to close the popup
+        }
+      }
+
+      // Close Quiz popup function
+      function closeQuizPopup() {
+        document.getElementById("quiz-popup-overlay").classList.remove("show");
+        document.body.style.overflow = ""; // Restore page scrolling
+      }
+    </script>
+  </body>
+</html>
